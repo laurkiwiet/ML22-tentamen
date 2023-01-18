@@ -13,6 +13,12 @@ Het model in deze file heeft in de eerste hidden layer 100 units, in de tweede l
 De dropout staat op 0.5, hij heeft in een blog gelezen dat dit de beste settings voor dropout zou zijn.
 
 - Wat vind je van de architectuur die hij heeft uitgekozen (een Neuraal netwerk met drie Linear layers)? Wat zijn sterke en zwakke kanten van een model als dit in het algemeen? En voor dit specifieke probleem?
+
+**Er zijn een aantal voordelen van een neuraal netwerk met uitsluitend lineare layers. Het voordeel is dat het een simpel model is waarbij er weinig kans tot overfitting is. Wel kan daarmee ook het nadeel zijn dat het model gaat underfitten of niet accuraat genoeg is. <br>
+<br>
+Voor dit is dit niet de juiste keuze. Opzich is een classificatie met behulp van een simpel neuraal netwerk mogelijk. Maar voor dit model zou bijvoorbeeld tabulaire data geschikter zijn. Voor het classificeren van spraak is het beter om een neural netwerk te kiezen die om kan gaan met de volgordelijkheid in de data.**
+
+
 - Wat vind je van de keuzes die hij heeft gemaakt in de LinearConfig voor het aantal units ten opzichte van de data? En van de dropout?
 
 ## 1b
@@ -20,6 +26,8 @@ Als je in de forward methode van het Linear model kijkt (in `tentamen/model.py`)
 
 - Wat is het effect hiervan? Welk probleem probeert hij hier op te lossen? (maw, wat gaat er fout als hij dit niet doet?)
 - Hoe had hij dit ook kunnen oplossen?
+
+**AVGpooling**
 - Wat zijn voor een nadelen van de verschillende manieren om deze stap te doen?
 
 ### 1c
