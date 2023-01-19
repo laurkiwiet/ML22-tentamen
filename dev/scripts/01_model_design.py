@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     trainstreamer, teststreamer = datasets.get_arabic(presets)
 
-    from tentamen.model import Linear
+    from tentamen.model import GRUmodel, Linear
     from tentamen.settings import LinearConfig
 
     configs = [
@@ -22,12 +22,22 @@ if __name__ == "__main__":
         ),
     ]
 
+    config_GRU = {  # type: ignore
+        "input_size": 3,
+        "hidden_size": 32,
+        "dropout": 0.1,
+        "num_layers": 2,
+        "output_size": 10,
+    }
+
+    GRU_model = GRUmodel(config_GRU)  # type: ignore
+
     for config in configs:
         model = Linear(config.dict())  # type: ignore
 
         trainedmodel = trainloop(
             epochs=50,
-            model=model,  # type: ignore
+            model=GRU_model,  # type: ignore
             optimizer=torch.optim.Adam,
             learning_rate=1e-3,
             loss_fn=torch.nn.CrossEntropyLoss(),
