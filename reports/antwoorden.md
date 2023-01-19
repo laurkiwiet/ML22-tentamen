@@ -21,6 +21,9 @@ Voor dit is dit niet de juiste keuze. Opzich is een classificatie met behulp van
 
 - Wat vind je van de keuzes die hij heeft gemaakt in de LinearConfig voor het aantal units ten opzichte van de data? En van de dropout?
 
+**De input size komt overeen met de het aantal features die beschreven staan in de documentatie van de dataset. <br>
+De output size is wel raar. De output size staat op 20. Terwijl de dataset 10 classes bevat, namelijk alle cijfers in het arabisch van 0 tot 10. Ik zou bij de output size dus 10 verwachten. Nu maakt het model onderscheid in 20 verschillende classes.**
+
 ## 1b
 Als je in de forward methode van het Linear model kijkt (in `tentamen/model.py`) dan kun je zien dat het eerste dat hij doet `x.mean(dim=1)` is. 
 
@@ -34,6 +37,7 @@ Als je in de forward methode van het Linear model kijkt (in `tentamen/model.py`)
 Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitleggen wat een betere architectuur zou zijn.
 
 - Beschrijf de architecturen die je kunt overwegen voor een probleem als dit. Het is voldoende als je beschrijft welke layers in welke combinaties je zou kunnen gebruiken.
+**Voor dit probleem is een recurrent neural network de beste optie. Dit is omdat RNN's goed kunnen omgaan met sequential datasets. RNN's bewaren namelijk informatie uit de vorige laag in tegenstelling tot het netwerk als voorbeeld is gemaakt waarbij de informatie per stap opnieuw wordt verwerkt. Voor dit specifieke probleem waarbij taal moet worden herkent in een audioclip is waarschijnlijk een GRU architectuur de beste optie. Normale RNN's hebben het probleem dat het niet goed kan omgaan met lange afstand afhankelijkheden in tijd, dit wordt het gradient vanishing probleem genoemd. Een GRU architectuur kan hier beter mee omgaan omdat er door de gates kan worden op korte termijn belangrijke informatie kan worden onthouden. Een andere optie zou een LSTM architectuur zijn. Voor dit probleem is een GRU waarschijnlijk voldoende omdat het audioclips zijn waarin 1 cijfer wordt genoemd. Wanneer je bijvoorbeeld uit een zin het cijfer zou moeten halen is een LSTM beter.**
 - Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.
 - Geef aan wat jij verwacht dat de meest veelbelovende architectuur is, en waarom (opnieuw, laat zien dat je niet random getallen noemt, of keuzes maakt, maar dat jij je keuze baseert op ervaring die je hebt opgedaan met andere problemen).
 
