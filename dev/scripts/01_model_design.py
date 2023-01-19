@@ -23,7 +23,7 @@ if __name__ == "__main__":
     ]
 
     config_GRU = {  # type: ignore
-        "input_size": 3,
+        "input_size": 13,
         "hidden_size": 32,
         "dropout": 0.1,
         "num_layers": 2,
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         model = Linear(config.dict())  # type: ignore
 
         trainedmodel = trainloop(
-            epochs=50,
+            epochs=10,
             model=GRU_model,  # type: ignore
             optimizer=torch.optim.Adam,
             learning_rate=1e-3,

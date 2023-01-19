@@ -51,6 +51,7 @@ class LinearConfig(BaseSearchSpace):
     dropout: float
 
 
+
 class LinearSearchSpace(BaseSearchSpace):
     h1: Union[int, SAMPLE_INT] = tune.randint(16, 128)
     h2: Union[int, SAMPLE_INT] = tune.randint(16, 128)
