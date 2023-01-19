@@ -37,8 +37,22 @@ Als je in de forward methode van het Linear model kijkt (in `tentamen/model.py`)
 Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitleggen wat een betere architectuur zou zijn.
 
 - Beschrijf de architecturen die je kunt overwegen voor een probleem als dit. Het is voldoende als je beschrijft welke layers in welke combinaties je zou kunnen gebruiken.
+<br>
 **Voor dit probleem is een recurrent neural network de beste optie. Dit is omdat RNN's goed kunnen omgaan met sequential datasets. RNN's bewaren namelijk informatie uit de vorige laag in tegenstelling tot het netwerk als voorbeeld is gemaakt waarbij de informatie per stap opnieuw wordt verwerkt. Voor dit specifieke probleem waarbij taal moet worden herkent in een audioclip is waarschijnlijk een GRU architectuur de beste optie. Normale RNN's hebben het probleem dat het niet goed kan omgaan met lange afstand afhankelijkheden in tijd, dit wordt het gradient vanishing probleem genoemd. Een GRU architectuur kan hier beter mee omgaan omdat er door de gates kan worden op korte termijn belangrijke informatie kan worden onthouden. Een andere optie zou een LSTM architectuur zijn. Voor dit probleem is een GRU waarschijnlijk voldoende omdat het audioclips zijn waarin 1 cijfer wordt genoemd. Wanneer je bijvoorbeeld uit een zin het cijfer zou moeten halen is een LSTM beter.**
+<br>
 - Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.
+
+**Voor het maken van een GRU architectuur zijn er een aantal opties:**<br>
+"input_size" : 3,<br>
+ "hidden_size" : 32,<br>
+ "num_layers" : 4,<br>
+ "output_size" : 10<br>
+
+**De input size is altijd 3 bij een tijdserie. <br>
+De hidden_size is het geheugen wat de stappen uit de vorige laag bewaart. En de waarden zijn afhankelijk van de dataset, doel en computer capaciteit. Omdat het een dataset is met relatief weinig kolommen en de taak vrij eenvoudig is, is het goed om dit in eerste instantie klein te houden en in te zetten op 32.
+Ik zou in eerste instantie proberen een model zonder drop_out te proberen omdat het een relatief makkelijke taak is met een dataset die niet enorm is, dus de kans op overfitting nog klein is. 
+De outputsize is 10, het aantal classes die moeten worden gevonden in de dataset. **
+
 - Geef aan wat jij verwacht dat de meest veelbelovende architectuur is, en waarom (opnieuw, laat zien dat je niet random getallen noemt, of keuzes maakt, maar dat jij je keuze baseert op ervaring die je hebt opgedaan met andere problemen).
 
 ### 1d
