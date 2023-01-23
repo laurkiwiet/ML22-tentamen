@@ -33,6 +33,7 @@ presets = Settings(
     logdir=root / "logs",
     modelname="model.pt",
     batchsize=128,
+
 )
 
 
@@ -50,7 +51,10 @@ class LinearConfig(BaseSearchSpace):
     h2: int
     dropout: float
 
-
+class GruConfig(BaseSearchSpace):
+    num_layers: int
+    dropout: float
+    hidden_size: int
 
 class LinearSearchSpace(BaseSearchSpace):
     h1: Union[int, SAMPLE_INT] = tune.randint(16, 128)

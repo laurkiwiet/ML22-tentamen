@@ -3,6 +3,8 @@ from typing import Callable, Dict, Protocol
 import torch
 import torch.nn as nn
 
+from loguru import logger
+
 Tensor = torch.Tensor
 
 
@@ -35,27 +37,61 @@ class Linear(nn.Module):
 
 
 class GRUmodel(nn.Module):
-    def __init__(self, config_GRU: Dict) -> None:
-        super().__init__()
-        self.config_GRU = config_GRU
-
-        
+    def __init__(self, config: Dict) -> None:
+        super(GRUmodel, self).__init__()
         self.rnn = nn.GRU(
-            input_size=config_GRU["input_size"],
-            hidden_size=config_GRU["hidden_size"],
-            dropout=config_GRU["dropout"],
+            input_size=config["input"],
+            hidden_size=config["hidden_size"],
+            dropout=config["dropout"],
             batch_first=True,
-            num_layers=config_GRU["num_layers"],
+            num_layers=config["num_layers"],
         )
-        self.linear = nn.Linear(config_GRU["hidden_size"], config_GRU["output_size"])
+        self.linear1 = nn.Linear(config["hidden_size"], config["output"])
+        self.linear2 = nn.Linear(config["output"], config["num_classes"])
+        self.relu = nn.ReLU()
+        self.softmax = nn.Softmax(dim=1)
+        
+    def forward(self, x: Tensor) -> Tensor:
+        x, _ = self.rnn(x)
+        last_step = x[:, -1, :].squeeze() 
+        yhat = self.linear1(last_step)
+        yhat = self.relu(yhat)
+        yhat = self.linear2(yhat)
+        yhat = self.softmax(yhat)
+        return yhat
+
+class GRUClassifier(nn.Module):
+    def __init__(self, input_size, hidden_size, num_layers, num_classes):
+        super(GRUClassifier, self).__init__()
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.gru = nn.GRU(input_size, hidden_size, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_size, num_classes)
+
+    def forward(self, x):
+        out, _ = self.gru(x)
+        out = self.fc(out[:, -1, :]) # take the last hidden state
+        return out
+
+class BaseRNN(nn.Module):
+    def __init__(
+        self, input_size: int, hidden_size: int, num_layers: int, horizon: int
+    ) -> None:
+        super().__init__()
+        self.rnn = nn.RNN(
+            input_size=input_size,
+            hidden_size=hidden_size,
+            batch_first=True,
+            num_layers=num_layers,
+        )
+        self.linear = nn.Linear(hidden_size, horizon)
+        self.horizon = horizon
 
     def forward(self, x: Tensor) -> Tensor:
         x, _ = self.rnn(x)
         last_step = x[:, -1, :]
         yhat = self.linear(last_step)
-        yhat = yhat.view(-1, config_GRU["output_size"])
         return yhat
-
 
 
 

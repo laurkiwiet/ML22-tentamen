@@ -13,31 +13,37 @@ if __name__ == "__main__":
 
     trainstreamer, teststreamer = datasets.get_arabic(presets)
 
-    from tentamen.model import GRUmodel, Linear
-    from tentamen.settings import LinearConfig
+    from tentamen.model import GRUmodel, Linear, GRUClassifier
+    from tentamen.settings import LinearConfig, GruConfig
 
     configs = [
         LinearConfig(
             input=13, output=20, tunedir=presets.logdir, h1=100, h2=10, dropout=0.5
         ),
+        GruConfig(
+            input=13, output=10,tunedir=presets.logdir, num_layers=2, hidden_size=32, dropout=0.2
+        )
     ]
 
-    config_GRU = {  # type: ignore
-        "input_size": 13,
-        "hidden_size": 32,
-        "dropout": 0.1,
-        "num_layers": 2,
-        "output_size": 10,
+    config =  GruConfig(input=13, output=10,tunedir=presets.logdir, num_layers=2, hidden_size=32, dropout=0.2)
+
+    config_GRU = {
+        "input": 13,
+        "hidden_size": 64,
+        "dropout": 0,
+        "num_layers": 1,
+        "output": 32,
+        "num_classes": 10
     }
 
-    GRU_model = GRUmodel(config_GRU)  # type: ignore
+    model_gru = GRUmodel(config_GRU)
+  #  for config in configs:
+      #  model = Linear(config.dict())  # type: ignore
+       # model_gru = GRUmodel(config.dict())
 
-    for config in configs:
-        model = Linear(config.dict())  # type: ignore
-
-        trainedmodel = trainloop(
+    trainedmodel = trainloop(
             epochs=10,
-            model=GRU_model,  # type: ignore
+            model=model_gru,  # type: ignore
             optimizer=torch.optim.Adam,
             learning_rate=1e-3,
             loss_fn=torch.nn.CrossEntropyLoss(),
@@ -49,7 +55,7 @@ if __name__ == "__main__":
             eval_steps=len(teststreamer),
         )
 
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        path = presets.modeldir / (timestamp + presets.modelname)
-        logger.info(f"save model to {path}")
-        torch.save(trainedmodel, path)
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    path = presets.modeldir / (timestamp + presets.modelname)
+    logger.info(f"save model to {path}")
+    torch.save(trainedmodel, path)
