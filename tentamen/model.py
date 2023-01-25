@@ -52,6 +52,7 @@ class GRUmodel(nn.Module):
         self.softmax = nn.Softmax(dim=1)
         
     def forward(self, x: Tensor) -> Tensor:
+        print("the shape is",x.shape)
         x, _ = self.rnn(x)
         last_step = x[:, -1, :].squeeze() 
         yhat = self.linear1(last_step)
@@ -59,41 +60,6 @@ class GRUmodel(nn.Module):
         yhat = self.linear2(yhat)
         yhat = self.softmax(yhat)
         return yhat
-
-class GRUClassifier(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers, num_classes):
-        super(GRUClassifier, self).__init__()
-        self.hidden_size = hidden_size
-        self.num_layers = num_layers
-        self.gru = nn.GRU(input_size, hidden_size, num_layers, batch_first=True)
-        self.fc = nn.Linear(hidden_size, num_classes)
-
-    def forward(self, x):
-        out, _ = self.gru(x)
-        out = self.fc(out[:, -1, :]) # take the last hidden state
-        return out
-
-class BaseRNN(nn.Module):
-    def __init__(
-        self, input_size: int, hidden_size: int, num_layers: int, horizon: int
-    ) -> None:
-        super().__init__()
-        self.rnn = nn.RNN(
-            input_size=input_size,
-            hidden_size=hidden_size,
-            batch_first=True,
-            num_layers=num_layers,
-        )
-        self.linear = nn.Linear(hidden_size, horizon)
-        self.horizon = horizon
-
-    def forward(self, x: Tensor) -> Tensor:
-        x, _ = self.rnn(x)
-        last_step = x[:, -1, :]
-        yhat = self.linear(last_step)
-        return yhat
-
-
 
 class Accuracy:
     def __repr__(self) -> str:

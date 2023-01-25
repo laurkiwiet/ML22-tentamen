@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     trainstreamer, teststreamer = datasets.get_arabic(presets)
 
-    from tentamen.model import GRUmodel, Linear, GRUClassifier
+    from tentamen.model import GRUmodel, Linear
     from tentamen.settings import LinearConfig, GruConfig
 
     configs = [
@@ -33,7 +33,7 @@ if __name__ == "__main__":
         "dropout": 0,
         "num_layers": 1,
         "output": 32,
-        "num_classes": 10
+        "num_classes": 20
     }
 
     model_gru = GRUmodel(config_GRU)
