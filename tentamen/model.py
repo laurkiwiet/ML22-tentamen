@@ -44,13 +44,13 @@ class GRUmodel(nn.Module):
     ) -> None:
         super().__init__()
         self.rnn = nn.GRU(
-            input_size=config["input_size"],
+            input_size=config["input"],
             hidden_size=config["hidden_size"],
             dropout=config["dropout"],
             batch_first=True,
             num_layers=config["num_layers"],
         )
-        self.linear = nn.Linear(config["hidden_size"], config["output_size"])
+        self.linear = nn.Linear(config["hidden_size"], config["output"])
 
     def forward(self, x: Tensor) -> Tensor:
         x, _ = self.rnn(x)

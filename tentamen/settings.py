@@ -60,3 +60,6 @@ class LinearSearchSpace(BaseSearchSpace):
     h1: Union[int, SAMPLE_INT] = tune.randint(16, 128)
     h2: Union[int, SAMPLE_INT] = tune.randint(16, 128)
     dropout: Union[float, SAMPLE_FLOAT] = tune.uniform(0.0, 0.5)
+    num_layers: Union[int, SAMPLE_INT] = tune.randint(2, 5)
+    hidden_size: Union[int, SAMPLE_INT] = tune.randint(16, 128)
+
