@@ -36,30 +36,28 @@ class Linear(nn.Module):
         return x
 
 
+
 class GRUmodel(nn.Module):
-    def __init__(self, config: Dict) -> None:
-        super(GRUmodel, self).__init__()
+    def __init__(
+        self,
+        config: Dict,
+    ) -> None:
+        super().__init__()
         self.rnn = nn.GRU(
-            input_size=config["input"],
+            input_size=config["input_size"],
             hidden_size=config["hidden_size"],
             dropout=config["dropout"],
             batch_first=True,
             num_layers=config["num_layers"],
         )
-        self.linear1 = nn.Linear(config["hidden_size"], config["output"])
-        self.linear2 = nn.Linear(config["output"], config["num_classes"])
-        self.relu = nn.ReLU()
-        self.softmax = nn.Softmax(dim=1)
-        
+        self.linear = nn.Linear(config["hidden_size"], config["output_size"])
+
     def forward(self, x: Tensor) -> Tensor:
-        print("the shape is",x.shape)
         x, _ = self.rnn(x)
-        last_step = x[:, -1, :].squeeze() 
-        yhat = self.linear1(last_step)
-        yhat = self.relu(yhat)
-        yhat = self.linear2(yhat)
-        yhat = self.softmax(yhat)
+        last_step = x[:, -1, :]
+        yhat = self.linear(last_step)
         return yhat
+
 
 class Accuracy:
     def __repr__(self) -> str:

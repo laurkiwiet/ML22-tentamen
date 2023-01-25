@@ -43,15 +43,18 @@ Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitlegg
 - Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.
 
 **Voor het maken van een GRU architectuur zijn er een aantal opties:**<br>
-"input_size" : 3,<br>
- "hidden_size" : 32,<br>
- "num_layers" : 4,<br>
- "output_size" : 10<br>
+  "input": 13, <br>
+  "hidden_size": 64,<br>
+  "dropout": 0.2,<br>
+  "num_layers": 1,<br>
+  "output": 32,<br>
+  "num_classes": 20<br>
+    }
 
 **De input size is altijd 3 bij een tijdserie. <br>
 De hidden_size is het geheugen wat de stappen uit de vorige laag bewaart. En de waarden zijn afhankelijk van de dataset, doel en computer capaciteit. Omdat het een dataset is met relatief weinig kolommen en de taak vrij eenvoudig is, is het goed om dit in eerste instantie klein te houden en in te zetten op 32.
-Ik zou in eerste instantie proberen een model zonder drop_out te proberen omdat het een relatief makkelijke taak is met een dataset die niet enorm is, dus de kans op overfitting nog klein is. 
-De outputsize is 10, het aantal classes die moeten worden gevonden in de dataset. **
+Ik zou in eerste instantie proberen een model lage drop_out proberen omdat het een relatief makkelijke taak is met een dataset die niet enorm is, dus de kans op overfitting nog klein is. 
+De outputsize is 20, het aantal classes die moeten worden gevonden in de dataset. **
 
 - Geef aan wat jij verwacht dat de meest veelbelovende architectuur is, en waarom (opnieuw, laat zien dat je niet random getallen noemt, of keuzes maakt, maar dat jij je keuze baseert op ervaring die je hebt opgedaan met andere problemen).
 
@@ -63,6 +66,11 @@ Implementeer jouw veelbelovende model:
 - Train het model met enkele educated guesses van parameters. 
 - Rapporteer je bevindingen. Ga hier niet te uitgebreid hypertunen (dat is vraag 2), maar rapporteer (met een afbeelding in `antwoorden/img` die je linkt naar jouw .md antwoord) voor bijvoorbeeld drie verschillende parametersets hoe de train/test loss curve verloopt.
 - reflecteer op deze eerste verkenning van je model. Wat valt op, wat vind je interessant, wat had je niet verwacht, welk inzicht neem je mee naar de hypertuning.
+
+**Ik heb een tweede lineaire laag toegevoegd en heb 128 als hidden_size en nu 3 layers gebruikt. Het model is aan het overfitten. Daarom maak ik de drop_out hoger en maak ik het model simpeler met 1 lineaire laag, 3 num_layers en een hidden_size van 32. De verhouding tussen de loss op de train en validatieset is beter alleen de accuracy is nog niet zo hoog. Dit zou ik mogelijk kunnen verbeteren door meer epochs toe te voegen.**
+<br>
+
+**In de laatste optie heb ik num_layers op 3 gehouden en als input 64 genomen. De verhouding tussen de validation en train set blijft goed maar zijn alleen nog vrij hoog. Net als dat de accuracy nog steeds maar 85% is. Ik denk dat het model gewoon vaker getraind moet worden dus ik heb met dezelfde parameters met 50 epochs getraind i.p.v. 20. **
 
 Hieronder een voorbeeld hoe je een plaatje met caption zou kunnen invoegen.
 
