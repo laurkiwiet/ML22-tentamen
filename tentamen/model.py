@@ -36,6 +36,7 @@ class Linear(nn.Module):
         return x
 
 
+
 class GRUmodel(nn.Module):
     def __init__(
         self,
@@ -49,14 +50,12 @@ class GRUmodel(nn.Module):
             batch_first=True,
             num_layers=config["num_layers"],
         )
-        self.linear1 = nn.Linear(config["hidden_size"], config["hidden_size"])
-        self.linear2 = nn.Linear(config["hidden_size"], config["output_size"])
+        self.linear = nn.Linear(config["hidden_size"], config["output_size"])
 
     def forward(self, x: Tensor) -> Tensor:
         x, _ = self.rnn(x)
         last_step = x[:, -1, :]
-        last_step = self.linear1(last_step)
-        yhat = self.linear2(last_step)
+        yhat = self.linear(last_step)
         return yhat
 
 

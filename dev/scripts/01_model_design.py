@@ -29,8 +29,8 @@ if __name__ == "__main__":
 
     config_GRU = {
         "input_size": 13,
-        "hidden_size": 128,
-        "dropout": 0.2,
+        "hidden_size": 64,
+        "dropout": 0.5,
         "num_layers": 3,
         "output_size": 32,
         "num_classes": 20
@@ -42,7 +42,7 @@ if __name__ == "__main__":
        # model_gru = GRUmodel(config.dict())
 
     trainedmodel = trainloop(
-            epochs=20,
+            epochs=50,
             model=model_gru,  # type: ignore
             optimizer=torch.optim.Adam,
             learning_rate=1e-3,
