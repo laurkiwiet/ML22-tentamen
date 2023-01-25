@@ -43,15 +43,18 @@ Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitlegg
 - Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.
 
 **Voor het maken van een GRU architectuur zijn er een aantal opties:**<br>
-"input_size" : 3,<br>
- "hidden_size" : 32,<br>
- "num_layers" : 4,<br>
- "output_size" : 10<br>
+  "input": 13, <br>
+  "hidden_size": 64,<br>
+  "dropout": 0.2,<br>
+  "num_layers": 1,<br>
+  "output": 32,<br>
+  "num_classes": 20<br>
+    }
 
 **De input size is altijd 3 bij een tijdserie. <br>
 De hidden_size is het geheugen wat de stappen uit de vorige laag bewaart. En de waarden zijn afhankelijk van de dataset, doel en computer capaciteit. Omdat het een dataset is met relatief weinig kolommen en de taak vrij eenvoudig is, is het goed om dit in eerste instantie klein te houden en in te zetten op 32.
-Ik zou in eerste instantie proberen een model zonder drop_out te proberen omdat het een relatief makkelijke taak is met een dataset die niet enorm is, dus de kans op overfitting nog klein is. 
-De outputsize is 10, het aantal classes die moeten worden gevonden in de dataset. **
+Ik zou in eerste instantie proberen een model lage drop_out proberen omdat het een relatief makkelijke taak is met een dataset die niet enorm is, dus de kans op overfitting nog klein is. 
+De outputsize is 20, het aantal classes die moeten worden gevonden in de dataset. **
 
 - Geef aan wat jij verwacht dat de meest veelbelovende architectuur is, en waarom (opnieuw, laat zien dat je niet random getallen noemt, of keuzes maakt, maar dat jij je keuze baseert op ervaring die je hebt opgedaan met andere problemen).
 
