@@ -16,13 +16,14 @@ if __name__ == "__main__":
     from tentamen.model import GRUmodel, Linear
     from tentamen.settings import GruConfig, LinearConfig
 
-    configs = [
-        LinearConfig(
-            input=13, output=20, tunedir=presets.logdir, h1=100, h2=10, dropout=0.5
-        )
-    ]
+#configs = [
+ #       LinearConfig(
+   #         input=13, output=20, tunedir=presets.logdir, h1=100, h2=10, dropout=0.5
+   #     )
+  #  ]
 
-    config_GRU = GruConfig(
+    configs = [
+        GruConfig(
         input=13,
         output=20,
         tunedir=presets.logdir,
@@ -30,11 +31,23 @@ if __name__ == "__main__":
         hidden_size=16,
         dropout=0.2,
     )
+    ]
 
-    model_gru = GRUmodel(config_GRU)
-    #  for config in configs:
-    #  model = Linear(config.dict())  # type: ignore
-    # model_gru = GRUmodel(config.dict())
+
+
+    config_GRU = {
+        "input_size": 13,
+        "hidden_size": 64,
+        "dropout": 0.5,
+        "num_layers": 3,
+        "output_size": 32,
+        "num_classes": 20,
+    }
+
+    #model_gru = GRUmodel(config_GRU)
+    for config in configs:
+        model_gru = GRUmodel(config.dict())  # type: ignore
+      
 
     trainedmodel = trainloop(
         epochs=50,
