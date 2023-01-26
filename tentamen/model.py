@@ -2,7 +2,6 @@ from typing import Callable, Dict, Protocol
 
 import torch
 import torch.nn as nn
-
 from loguru import logger
 
 Tensor = torch.Tensor
@@ -36,12 +35,8 @@ class Linear(nn.Module):
         return x
 
 
-
 class GRUmodel(nn.Module):
-    def __init__(
-        self,
-        config: Dict,
-    ) -> None:
+    def __init__(self, config: Dict) -> None:
         super().__init__()
         self.rnn = nn.GRU(
             input_size=config["input_size"],
