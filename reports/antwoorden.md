@@ -14,15 +14,27 @@ De dropout staat op 0.5, hij heeft in een blog gelezen dat dit de beste settings
 
 - Wat vind je van de architectuur die hij heeft uitgekozen (een Neuraal netwerk met drie Linear layers)? Wat zijn sterke en zwakke kanten van een model als dit in het algemeen? En voor dit specifieke probleem?
 
-**Er zijn een aantal voordelen van een neuraal netwerk met uitsluitend lineare layers. Het voordeel is dat het een simpel model is waarbij er weinig kans tot overfitting is. Wel kan daarmee ook het nadeel zijn dat het model gaat underfitten of niet accuraat genoeg is. <br>
+De collega heeft een lineair neural netwerk gemaakt die bestaat uit drie lineaire lagen met twee activatie (ReLu) functies. Er zijn een aantal voordelen van deze architectuur:<br>
+<ul>
+<li>Het is simpel model en hierdoor kost het minder computerkracht om het model te draaien.</li>
+<li>Door de lineaire lagen is het redelijk intepreteerbaar en uitlegbaar omdat de meeste mensen snappen hoe een lineaire regressie werkt. </li>
+</ul> <br>
+Er zijn ook een aantal nadelen:<br>
+<ul>
+<li>Doordat het een relatief simpel model is bestaat de kans op underfitting, dus dat het model onvoldoende patronen kan ontdekken in de data. </li>
+<li>Het model houdt geen rekening met afhankelijkheden in de data. Iedere kolom wordt als onafhankelijke input gezien zonder dat er rekening gehouden wordt met onderlinge relaties in kolommen, wat wel van belang is bij tijdserie data. </li>
+</ul>
 <br>
-Voor dit is dit niet de juiste keuze. Opzich is een classificatie met behulp van een simpel neuraal netwerk mogelijk. Maar voor dit model zou bijvoorbeeld tabulaire data geschikter zijn. Voor het classificeren van spraak is het beter om een neural netwerk te kiezen die om kan gaan met de volgordelijkheid in de data.**
-
-
+Voor het probleem wat wordt gesteld is deze architectuur niet de juiste keuze. Omdat het om spraak data, tijdseries, gaat is het beter om een architectuur te kiezen die kan omgaan met volgordelijkheid in data en een geheugen heeft. De architectuur die gekozen is door de collega kan bijvoorbeeld wel geschikt zijn voor een simpele classificatie op basis van tubulaire data.<br>
+<br>
 - Wat vind je van de keuzes die hij heeft gemaakt in de LinearConfig voor het aantal units ten opzichte van de data? En van de dropout?
-
-**De input size komt overeen met de het aantal features die beschreven staan in de documentatie van de dataset. <br>
-De output size is wel raar. De output size staat op 20. Terwijl de dataset 10 classes bevat, namelijk alle cijfers in het arabisch van 0 tot 10. Ik zou bij de output size dus 10 verwachten. Nu maakt het model onderscheid in 20 verschillende classes.**
+<br>
+<br>
+<ul>
+<li>H1=100; dit is best een groot aantal hidden_units om dit model mee te beginnen. De input is 13 dus het is beter om kleiner te beginnen, uit te testen en eventueel aan te passen. Ik zou zelf eerder beginnen met 32 of 64.</li>
+<li>H2=10, de stap tussen 100 en 10 is best groot. Dit betekent dat het model in de tweede laag veel minder goed complexe patronen kan leren.</li>
+<li>Drop_out = 0.5 is ook wel heel hoog in deze architectuur. In de tweede laag wordt er al terug gegaan naar een hidden_size van 10, waarvan dan vervolgens ook nog 50% van op 0 worden gezet. Dit betekent dat het model niet goed complexe structuren kan leren. </li>
+<br>
 
 ## 1b
 Als je in de forward methode van het Linear model kijkt (in `tentamen/model.py`) dan kun je zien dat het eerste dat hij doet `x.mean(dim=1)` is. 
@@ -67,7 +79,21 @@ Implementeer jouw veelbelovende model:
 - Rapporteer je bevindingen. Ga hier niet te uitgebreid hypertunen (dat is vraag 2), maar rapporteer (met een afbeelding in `antwoorden/img` die je linkt naar jouw .md antwoord) voor bijvoorbeeld drie verschillende parametersets hoe de train/test loss curve verloopt.
 - reflecteer op deze eerste verkenning van je model. Wat valt op, wat vind je interessant, wat had je niet verwacht, welk inzicht neem je mee naar de hypertuning.
 
-**Ik heb een tweede lineaire laag toegevoegd en heb 128 als hidden_size en nu 3 layers gebruikt. Het model is aan het overfitten. Daarom maak ik de drop_out hoger en maak ik het model simpeler met 1 lineaire laag, 3 num_layers en een hidden_size van 32. De verhouding tussen de loss op de train en validatieset is beter alleen de accuracy is nog niet zo hoog. Dit zou ik mogelijk kunnen verbeteren door meer epochs toe te voegen.**
+<br>
+
+**Run 1: Hidden_size 128, drop_out 0.2, output 32, num_layers 3**
+
+
+<figure>
+  <p align = "center">
+    <img src="img/run 1.PNG" style="width:50%">
+    <figcaption align="center">
+      <b> Figuur 1: resultaten run 1.</b>
+    </figcaption>
+  </p>
+</figure>
+
+**Ik heb 128 als hidden_size en 3 layers gebruikt. Het model is aan het overfitten. Daarom maak ik de drop_out hoger en maak ik het model simpeler met 1 lineaire laag, 3 num_layers en een hidden_size van 32. De verhouding tussen de loss op de train en validatieset is beter alleen de accuracy is nog niet zo hoog. Dit zou ik mogelijk kunnen verbeteren door meer epochs toe te voegen.**
 <br>
 
 **In de laatste optie heb ik num_layers op 3 gehouden en als input 64 genomen. De verhouding tussen de validation en train set blijft goed maar zijn alleen nog vrij hoog. Net als dat de accuracy nog steeds maar 85% is. Ik denk dat het model gewoon vaker getraind moet worden dus ik heb met dezelfde parameters met 50 epochs getraind i.p.v. 20. **
