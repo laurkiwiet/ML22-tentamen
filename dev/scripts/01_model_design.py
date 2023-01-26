@@ -27,22 +27,12 @@ if __name__ == "__main__":
         input=13,
         output=20,
         tunedir=presets.logdir,
-        num_layers=2,
-        hidden_size=16,
+        num_layers=3,
+        hidden_size=32,
         dropout=0.2,
     )
     ]
 
-
-
-    config_GRU = {
-        "input_size": 13,
-        "hidden_size": 64,
-        "dropout": 0.5,
-        "num_layers": 3,
-        "output_size": 32,
-        "num_classes": 20,
-    }
 
     #model_gru = GRUmodel(config_GRU)
     for config in configs:
