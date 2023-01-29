@@ -54,6 +54,7 @@ class GRUmodel(nn.Module):
         return yhat
 
 
+
 class Accuracy:
     def __repr__(self) -> str:
         return "Accuracy"
