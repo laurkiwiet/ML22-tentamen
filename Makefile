@@ -10,6 +10,9 @@ tune:
 result: 
 	export PYTHONPATH="$$HOME/code/tentamen" ;poetry run python dev/scripts/03_result.py
 
+final:	
+	export PYTHONPATH="$$HOME/code/ML22-tentamen" ;poetry run python dev/scripts/2C_model_design.py
+
 format:
 	poetry run isort dev
 	poetry run black dev
