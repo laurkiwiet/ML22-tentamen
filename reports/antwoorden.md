@@ -21,8 +21,10 @@ De collega heeft een lineair neural netwerk gemaakt die bestaat uit drie lineair
 </ul> <br>
 Er zijn ook een aantal nadelen:<br>
 <ul>
-<li>Doordat het een relatief simpel model is bestaat de kans op underfitting, dus dat het model onvoldoende patronen kan ontdekken in de data. </li>
+<li>Omdat lineaire modellen een rechte lijn tussen in- en output trekken zijn ze gevoelig voor outliers.</li>
+<li>Doordat lineare modellen gevoelig zijn voor outliers wordt de kans op overfitting groter omdat er teveel focus ligt op de extremen in de data. Hierdoor worden de belangrijke patronen gemist en niet goed gegeneraliseerd.</li>
 <li>Het model houdt geen rekening met afhankelijkheden in de data. Iedere kolom wordt als onafhankelijke input gezien zonder dat er rekening gehouden wordt met onderlinge relaties in kolommen, wat wel van belang is bij tijdserie data. </li>
+<li>Lineaire modellen zijn vaak te simpel om echt de belangrijke patronen in de data te ontdekken</li>
 </ul>
 <br>
 Voor het probleem wat wordt gesteld is deze architectuur niet de juiste keuze. Omdat het om spraak data, tijdseries, gaat is het beter om een architectuur te kiezen die kan omgaan met volgordelijkheid in data en een geheugen heeft. De architectuur die gekozen is door de collega kan bijvoorbeeld wel geschikt zijn voor een simpele classificatie op basis van tubulaire data.<br>
@@ -50,26 +52,75 @@ Als je in de forward methode van het Linear model kijkt (in `tentamen/model.py`)
 Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitleggen wat een betere architectuur zou zijn.
 
 - Beschrijf de architecturen die je kunt overwegen voor een probleem als dit. Het is voldoende als je beschrijft welke layers in welke combinaties je zou kunnen gebruiken.<br>'
+<br>Voor dit probleem is een recurrent neural network de beste optie. Dit is omdat RNN's goed kunnen omgaan met volgordelijkheid in datasets. RNN's bewaren namelijk informatie uit de vorige laag in tegenstelling tot het netwerk die als voorbeeld is gemaakt waarbij de informatie per stap opnieuw wordt verwerkt. Voor dit specifieke probleem waarbij taal moet worden herkent in een audioclip is waarschijnlijk een GRU architectuur de beste optie. Normale RNN's hebben het probleem dat het niet goed kan omgaan met lange afstand afhankelijkheden in tijd. Een GRU architectuur kan hier beter mee omgaan omdat er door de gates op korte termijn belangrijke informatie kan worden onthouden. Een andere optie kan een LSTM architectuur zijn. Voor dit probleem is een GRU waarschijnlijk voldoende omdat het audioclips zijn waarin 1 cijfer wordt genoemd. Een LSTM kan bijvoorbeeld beter werken wanneer er een cijfer uit een zin moet worden gehaald. 
 <br>
-Voor dit probleem is een recurrent neural network de beste optie. Dit is omdat RNN's goed kunnen omgaan met volgordelijkheid in datasets. RNN's bewaren namelijk informatie uit de vorige laag in tegenstelling tot het netwerk die als voorbeeld is gemaakt waarbij de informatie per stap opnieuw wordt verwerkt. Voor dit specifieke probleem waarbij taal moet worden herkent in een audioclip is waarschijnlijk een GRU architectuur de beste optie. Normale RNN's hebben het probleem dat het niet goed kan omgaan met lange afstand afhankelijkheden in tijd. Een GRU architectuur kan hier beter mee omgaan omdat er door de gates op korte termijn belangrijke informatie kan worden onthouden. Een andere optie kan een LSTM architectuur zijn. Voor dit probleem is een GRU waarschijnlijk voldoende omdat het audioclips zijn waarin 1 cijfer wordt genoemd. Een LSTM kan bijvoorbeeld beter werken wanneer er een cijfer uit een zin moet worden gehaald. <br>
 <br>
 - Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.
 
 **Voor het maken van een GRU architectuur zijn er een aantal opties:**<br>
-  "input": 13, <br>
-  "hidden_size": 64,<br>
-  "dropout": 0.2,<br>
-  "num_layers": 1,<br>
-  "output": 32,<br>
-  "num_classes": 20<br>
-    }
+ In het onderstaande codevoorbeeld staat de GRU architectuur die ik ga gebruiken voor mijn model. Onder de code ligt ik het toe.<br>
 
-**De input size is altijd 3 bij een tijdserie. <br>
-De hidden_size is het geheugen wat de stappen uit de vorige laag bewaart. En de waarden zijn afhankelijk van de dataset, doel en computer capaciteit. Omdat het een dataset is met relatief weinig kolommen en de taak vrij eenvoudig is, is het goed om dit in eerste instantie klein te houden en in te zetten op 32.
-Ik zou in eerste instantie proberen een model lage drop_out proberen omdat het een relatief makkelijke taak is met een dataset die niet enorm is, dus de kans op overfitting nog klein is. 
-De outputsize is 20, het aantal classes die moeten worden gevonden in de dataset. **
 
-- Geef aan wat jij verwacht dat de meest veelbelovende architectuur is, en waarom (opnieuw, laat zien dat je niet random getallen noemt, of keuzes maakt, maar dat jij je keuze baseert op ervaring die je hebt opgedaan met andere problemen).
+  
+  GRUmodel(nn.Module):
+
+      def __init__(self, config: Dict) -> None:
+        super().__init__()
+        self.rnn = nn.GRU(
+            input_size=config[“input_size”],
+            hidden_size=config[“hidden_size”],
+            dropout=config[“dropout”],
+            batch_first=True,
+            num_layers=config[“num_layers”],
+        )
+        self.linear = nn.Linear(config[“hidden_size”], config[“output_size”])
+
+    def forward(self, x: Tensor) -> Tensor:
+        x, _ = self.rnn(x)
+        last_step = x[:, -1, :]
+        yhat = self.linear(last_step)
+        return yhat
+<br>
+Het gaat om een dataset met ongeveer 8000 regels met ieder 13 features waar 20 classes moet worden geclassificeerd. De dataset bestaat uit mensen (mannen en vrouwen) die een nummer van 0 tot 9 in het Arabisch uitspreken. Een GRU architectuur past hier dus goed bij omdat het om kan gaan met volordelijkheid in data door het geheugen en de gates. De data is in eerste instantie drie dimensionaal en bestaat uit; batchsize, sequence length en hidden size. <br>
+Die data gaat door het aantal GRU layers wat wordt aangegeven door de parameter num_layers. In eerste instantie verwacht ik dat 2 of 3 layers voldoende zijn. Dit komt omdat het een relatief kleine dataset is met maar 13 features en de kans op overfitten bij een complexer model groter wordt. <br>
+De parameter hidden_size bepaald hoe groot het geheugen is voor de hidden state. De hidden state vat de informatie samen en beslist wat doorgaat naar de volgende GRU laag. De parameter hidden_size is enigszins vergelijkbaar met de filter_size in een CNN. Ook bij deze parameter verwacht ik dat een klein aantal mogelijk voldoende zou kunnen zijn. Ik zou starten bij 16 of 32 en op opbouwen tot maximaal 128. Door het klein te houden wordt het aantal parameters in het model klein gehouden, kan het model sneller trainen en wordt de kans op overfitting minder groot. <br>
+Een drop out toevoegen helpt ook bij mogelijk overfitten en zorgt ervoor dat het model beter kan omgaan met nieuwe data. Om te testen of dit ook voordelen heeft voor deze specifieke opdracht zou ik alles van 0 t/m 0,5 willen uitproberen. Ik verwacht wel dat 0,5 echt te hoog is omdat er dan teveel data niet wordt gebruikt. <br>
+Het toevoegen van een drop-out aan het model kan helpen bij het voorkomen van overfitten en het model beter laten presteren met nieuwe data. Ik verwacht dat een lage dropout voldoende is, ik verwacht dat ergens tussen de 0.1 en 0.2 het beste werkt. Ik zou wel alles tussen de 0 en 0,5 willen uitproberen bij het hypertunen.<br>
+Met een lineaire functie wordt er van 3 naar 2 dimensies gegaan. Een lineaire laag helpt bij het minder dimensionaal maken van de data en zorgt ervoor dat er sneller voorspellingen gemaakt kunnen worden. De output van de lineaire functie heeft het aantal classes dat moet worden voorspeld, in dit geval 20. <br>
+<br>
+
+- Geef aan wat jij verwacht dat de meest veelbelovende architectuur is, en waarom (opnieuw, laat zien dat je niet random getallen noemt, of keuzes maakt, maar dat jij je keuze baseert op ervaring die je hebt opgedaan met andere problemen).<br>
+<br>
+```
+{
+    config_GRU = GruConfig(
+        input=13,
+        output=20,
+        tunedir=presets.logdir,
+        num_layers=2,
+        hidden_size=16,
+        dropout=0.2,
+    )
+
+    trainedmodel = trainloop(
+        epochs=20,
+        model=model_gru,  # type: ignore
+        optimizer=torch.optim.Adam,
+        learning_rate=1e-3,
+        loss_fn=torch.nn.CrossEntropyLoss(),
+        metrics=[Accuracy()],
+        train_dataloader=trainstreamer.stream(),
+        test_dataloader=teststreamer.stream(),
+        log_dir=presets.logdir,
+        train_steps=len(trainstreamer),
+        eval_steps=len(teststreamer),
+    )
+}
+```
+<br>
+Ik verwacht dat 2 lagen voldoende zijn om een goed resultaat te bereiken, omdat het aantal features relatief laag is en het probleem niet al te complex is. Mogelijk werkt 1 of 3 lagen beter, dus ik zal deze beide opties meenemen in vraag 1D. Er zijn 13 input features en 20 output classes, waar 16 tussen zit, dus ik zal de hidden_size daarmee beginnen. Het kan zijn dat 32 als hidden_size een betere prestatie oplevert, dus ik zal dit ook meenemen in vraag 1D. Ik verwacht dat de kans op overfitting toeneemt bij een hidden_size van 64 of meer lagen.
+Voor de training settings wordt er begonnen met 20 epochs om te bekijken of dat voldoende is. Er wordt begonnen met een laag aantal epochs omdat ook een grote hoeveelheid epochs de kans op overfitten vergroot en simpelweg ook meer tijd kost.
+
 
 ### 1d
 Implementeer jouw veelbelovende model: 
