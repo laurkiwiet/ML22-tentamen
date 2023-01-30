@@ -67,3 +67,8 @@ class GruSearchSpace(BaseSearchSpace):
     hidden_size: Union[int, SAMPLE_INT] = tune.randint(16, 128)
     dropout: Union[float, SAMPLE_FLOAT] = tune.uniform(0.0, 0.5)
     learning_rate: Union[float, SAMPLE_FLOAT] = tune.uniform(0.0001, 0.001)
+
+class BestGruConfig(GruConfig):
+    num_layers = 3
+    dropout = 0.17
+    hidden_size = 123
