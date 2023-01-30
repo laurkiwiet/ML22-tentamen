@@ -131,6 +131,8 @@ Importeer de afbeeldingen in jouw antwoorden, reflecteer op je experiment, en ge
 ### 2c
 - Zorg dat jouw prijswinnende settings in een config komen te staan in `settings.py`, en train daarmee een model met een optimaal aantal epochs, daarvoor kun je `01_model_design.py` kopieren en hernoemen naar `2c_model_design.py`.
 
+<iframe src="/home/azureuser/code/ML22-tentamen/reports/img/epochs.html" width="100%" height="500"></iframe>
+
 ## Vraag 3
 ### 3a
 - fork deze repository.
