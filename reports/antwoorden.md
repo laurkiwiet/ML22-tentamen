@@ -183,7 +183,7 @@ In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs
 
 <figure>
   <p align = "center">
-    <img src="Run 1 dataframe.PNG" style="width:100%">
+    <img src="img/Run 1 dataframe.PNG" style="width:100%">
     <figcaption align="center">
       <b> Figuur 2: Train vs Test loss & Accuracy dataframe run 1</b>
     </figcaption>
@@ -305,7 +305,7 @@ class GruSearchSpace(BaseSearchSpace):
 **Wel hypertunen**<br>
 Ik wil minimaal 1 layer en maximaal 4. Bij vraag 1D was 3 lagen al veel. Echter was dit in combinatie met een hidden_size van 32 en 50 epochs, mogelijk kunnen 3 of 4 lagen wel werken met een minder grote hidden_size.<br> De drop_out mag ergens tussen de 0 en de 0.5 zijn. Ik verwacht dat 0.5 aan de hoge kant is en dat er teveel data verloren gaat. Maar mogelijk kan het in combinatie met een hoog aantal layers en hidden_size wel werken omdat er dan meer parameters zijn.<br> Ik ben ook benieuwd wat verschillende learning rates gaan doen. Omdat een GRU relatief gezien complex is ten opzichte van normale RNN’s zet ik de learning rate tussen 1e-5 en de 1e-3. Door de learning rate lager in te zetten kan het model mogelijk beter omgaan met onbekende data.<br>
 
-**Niet hypetunen**
+**Niet hypertunen**
 <br>
 Ik ga niet met verschillende loss functions werken. Dit is omdat cross entropy loss goed werkt met classificaties en het aantal classes dat moet worden voorspeld. <br>Ik ga ook niet verschillende optimizers proberen omdat Adam over het algemeen goed werkt met de range aan learning rates.<br> Ik ga het aantal epochs ook niet meenemen als hypertune parameter. Ik ga voor een vast aantal epochs van 30, tijdens de runs van vraag 1C leek het namelijk dat er na 30 epochs veel minder wordt geleerd.  <br>
 
