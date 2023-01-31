@@ -14,7 +14,9 @@ De dropout staat op 0.5, hij heeft in een blog gelezen dat dit de beste settings
 
 - Wat vind je van de architectuur die hij heeft uitgekozen (een Neuraal netwerk met drie Linear layers)? Wat zijn sterke en zwakke kanten van een model als dit in het algemeen? En voor dit specifieke probleem?
 
-De collega heeft een lineair neural netwerk gemaakt die bestaat uit drie lineaire lagen met twee activatie (ReLu) functies. Er zijn een aantal voordelen van deze architectuur:<br>
+**Antwoord 1a**
+
+Het voorbeeld is een lineair neural netwerk gemaakt die bestaat uit drie lineaire lagen met twee activatie (ReLu) functies. Er zijn een aantal voordelen van deze architectuur:<br>
 <ul>
 <li>Het is simpel model en hierdoor kost het minder computerkracht om het model te draaien.</li>
 <li>Door de lineaire lagen is het redelijk intepreteerbaar en uitlegbaar omdat de meeste mensen snappen hoe een lineaire regressie werkt. </li>
@@ -41,14 +43,26 @@ Voor het probleem wat wordt gesteld is deze architectuur niet de juiste keuze. O
 ## 1b
 Als je in de forward methode van het Linear model kijkt (in `tentamen/model.py`) dan kun je zien dat het eerste dat hij doet `x.mean(dim=1)` is. 
 
-- Wat is het effect hiervan? Welk probleem probeert hij hier op te lossen? (maw, wat gaat er fout als hij dit niet doet?)
-- Hoe had hij dit ook kunnen oplossen?
+**Antwoord 1b**
+- Wat is het effect hiervan? Welk probleem probeert hij hier op te lossen? (maw, wat gaat er fout als hij dit niet doet?)<br>
+<br>
+Tijdserie data is drie dimensionaal. Met de regel code wordt het gemiddelde berekend van de tweede dimensie van de tensor, dit is de sequence length. Wanneer dit niet wordt gedaan werken de lineaire lagen niet omdat een lineaire laag een 2 dimensionale input nodig heeft.
 
-**AVGpooling**
+- Hoe had hij dit ook kunnen oplossen?<br>
+<br>
+Door de maximale of minimale waarde te nemen van een tensor.
+
 - Wat zijn voor een nadelen van de verschillende manieren om deze stap te doen?
+Gemiddelde: Heeft als voordeel dat het een overal beeld geeft van de tensor.<br>
+Minimale waarde: dit kan de beste keuze zijn wanneer je opzoek gaat naar de minste waardes. ALs je bijvoorbeeld in een dataset met geluid opzoek gaat naar de stille periodes in audio data.<br>
+Maximale waarde: dit kan de beste keuze zijn wanneer je opzoek gaat naar de hoogste waardes. Als je bijvoorbeeld geluid wil classificeren in een rustige achtergrond.<br>
+Het heeft allemaal als nadeel dat veel informatie niet meegenomen wordt. Daarom werkt een 2 dimensionale laag niet goed als basis voor 3 dimensionale data. 
 <br>
 
-### 1c
+
+<br>
+
+## 1c
 Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitleggen wat een betere architectuur zou zijn.
 
 - Beschrijf de architecturen die je kunt overwegen voor een probleem als dit. Het is voldoende als je beschrijft welke layers in welke combinaties je zou kunnen gebruiken.<br>'
@@ -57,7 +71,9 @@ Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitlegg
 <br>
 - Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.<br>
 <br>
->
+**Antwoord 1c**
+<br>
+
  In het onderstaande codevoorbeeld staat de GRU architectuur die ik ga gebruiken voor mijn model. Onder de code leg ik de keuzes uit.<br>
 
 ```
@@ -93,6 +109,8 @@ Met een lineaire functie wordt er van 3 naar 2 dimensies gegaan. Een lineaire la
 <br>
 
 - Geef aan wat jij verwacht dat de meest veelbelovende architectuur is, en waarom (opnieuw, laat zien dat je niet random getallen noemt, of keuzes maakt, maar dat jij je keuze baseert op ervaring die je hebt opgedaan met andere problemen).<br>
+
+
 <br>
 ```
 {
@@ -137,6 +155,8 @@ Implementeer jouw veelbelovende model:
 - reflecteer op deze eerste verkenning van je model. Wat valt op, wat vind je interessant, wat had je niet verwacht, welk inzicht neem je mee naar de hypertuning.
 
 <br>
+
+**Antwoord 1d**
 
 **Run 1: 2 layers, hidden_size van 16 en drop_out 0.2 (roze lijn)**
 
@@ -263,6 +283,8 @@ Implementeer de hypertuning voor jouw architectuur:
 
 <br>
 
+**Antwoord 2a**
+
 Ik heb in de settingsfile een class ‘GruSearchSpace’ aangemaakt met de volgende settings:<br>
 
 ```
@@ -276,7 +298,11 @@ class GruSearchSpace(BaseSearchSpace):
 ```
 
 <br>
-Ik wil minimaal 1 layer en maximaal 4. Bij vraag 1D leek 3 layers al teveel te zijn. Echter was dit in combinatie met een hidden_size van 32 en 50 epochs, mogelijk kunnen 3 of 4 lagen wel werken met een minder grote hidden_size.<br> De drop_out mag ergens tussen de 0 en de 0.5 zijn. Ik verwacht dat 0.5 aan de hoge kant is en dat er teveel data verloren gaat. Maar mogelijk kan het in combinatie met een hoog aantal layers en hidden_size wel werken omdat er dan meer parameters.<br> Ik ben ook benieuwd wat verschillende learning rates gaan doen. Omdat een GRU relatief gezien complex is ten opzichte van normale RNN’s zet ik de learning rate tussen 1e-5 en de 1e-3. Door de learning rate lager in te zetten kan het model mogelijk beter omgaan met onbekende data.<br>
+
+**Wel hypertunen**<br>
+Ik wil minimaal 1 layer en maximaal 4. Bij vraag 1D was 3 lagen al veel. Echter was dit in combinatie met een hidden_size van 32 en 50 epochs, mogelijk kunnen 3 of 4 lagen wel werken met een minder grote hidden_size.<br> De drop_out mag ergens tussen de 0 en de 0.5 zijn. Ik verwacht dat 0.5 aan de hoge kant is en dat er teveel data verloren gaat. Maar mogelijk kan het in combinatie met een hoog aantal layers en hidden_size wel werken omdat er dan meer parameters zijn.<br> Ik ben ook benieuwd wat verschillende learning rates gaan doen. Omdat een GRU relatief gezien complex is ten opzichte van normale RNN’s zet ik de learning rate tussen 1e-5 en de 1e-3. Door de learning rate lager in te zetten kan het model mogelijk beter omgaan met onbekende data.<br>
+
+**Niet hypetunen**
 <br>
 Ik ga niet met verschillende loss functions werken. Dit is omdat cross entropy loss goed werkt met classificaties en het aantal classes dat moet worden voorspeld. <br>Ik ga ook niet verschillende optimizers proberen omdat Adam over het algemeen goed werkt met de range aan learning rates.<br> Ik ga het aantal epochs ook niet meenemen als hypertune parameter. Ik ga voor een vast aantal epochs van 30, tijdens de runs van vraag 1C leek het namelijk dat er na 30 epochs veel minder wordt geleerd.  <br>
 
@@ -289,6 +315,8 @@ Ik ga niet met verschillende loss functions werken. Dit is omdat cross entropy l
 
 Importeer de afbeeldingen in jouw antwoorden, reflecteer op je experiment, en geef een interpretatie en toelichting op wat je ziet.<br>
 <br>
+
+**Antwoord 2b**
 
 **Test vs. Train loss & Accuracy**
 
@@ -356,7 +384,19 @@ Om te achterhalen wat het beste aantal Epochs is heb ik deze run in een grafiek 
 </figure> 
 
 In de bovenstaande grafiek is te zien dat de accuracy het hoogst ligt in epoch 28. De loss op de test set is in epoch 23 het laagst. Epoch 23 had na epoch 28 de hoogste accuracy en daarom heb ik het aantal epochs op 23 gezet.<br>
-In de settings file heb ik de settings van het beste model overgenomen en daarmee kom ik uit op een accuracy van 92%
+In de settings file heb ik de settings van het beste model overgenomen, de makefile aangepast en het model uitgevoerd. <br>
+
+De loss grafieken van de laatste run. <br>
+<figure>
+  <p align = "center">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/Final run tensorboard.PNG" style="width:100%">
+    <figcaption align="center">
+      <b> Figuur 10:  Train vs Test loss laatste run.</b><br>
+    </figcaption>
+  </p>
+</figure> 
+
+Het model is uitgekomen op een accuracy van 92% en de loss van de test en train set lopen niet ver van elkaar vandaan. Het model werkt dus goed. 
 
 
 
