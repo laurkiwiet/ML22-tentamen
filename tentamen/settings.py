@@ -62,11 +62,13 @@ class LinearSearchSpace(BaseSearchSpace):
     h2: Union[int, SAMPLE_INT] = tune.randint(16, 128)
     dropout: Union[float, SAMPLE_FLOAT] = tune.uniform(0.0, 0.5)
 
+
 class GruSearchSpace(BaseSearchSpace):
     num_layers: Union[int, SAMPLE_INT] = tune.randint(1, 5)
     hidden_size: Union[int, SAMPLE_INT] = tune.randint(16, 128)
     dropout: Union[float, SAMPLE_FLOAT] = tune.uniform(0.0, 0.5)
     learning_rate: Union[float, SAMPLE_FLOAT] = tune.uniform(0.0001, 0.001)
+
 
 class BestGruConfig(GruConfig):
     num_layers = 3

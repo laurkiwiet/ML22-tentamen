@@ -2,7 +2,7 @@ from typing import Callable, Dict, Protocol
 
 import torch
 import torch.nn as nn
-from loguru import logger
+from loguru import logger  # type: ignore
 
 Tensor = torch.Tensor
 
@@ -52,7 +52,6 @@ class GRUmodel(nn.Module):
         last_step = x[:, -1, :]
         yhat = self.linear(last_step)
         return yhat
-
 
 
 class Accuracy:
