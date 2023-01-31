@@ -169,7 +169,7 @@ Het model lijkt na 50 epochs nog steeds nieuwe patronen te ontdekken omdat de li
 
 <figure>
   <p align = "center">
-    <img src="reports/img/Run 1 tensorboard.PNG" style="width:100%">
+    <img src="img/Run 1 tensorboard.PNG" style="width:100%">
     <figcaption align="center">
       <b> Figuur 1: Train vs Test loss run 1.</b><br>
       <i> Run 1: roze | Run 2: geel | Run 3: paars</i>
