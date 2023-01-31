@@ -112,9 +112,10 @@ Met een lineaire functie wordt er van 3 naar 2 dimensies gegaan. Een lineaire la
 
 
 <br>
+
 ```
 {
-    config_GRU = GruConfig(
+ config_GRU = GruConfig(
         input=13,
         output=20,
         tunedir=presets.logdir,
@@ -136,8 +137,10 @@ Met een lineaire functie wordt er van 3 naar 2 dimensies gegaan. Een lineaire la
         train_steps=len(trainstreamer),
         eval_steps=len(teststreamer),
     )
+
 }
 ```
+
 <br>
 Ik verwacht dat 2 lagen voldoende is om een goed resultaat te bereiken, omdat het aantal features relatief laag is en het probleem niet heel complex is. Mogelijk werkt 3 lagen beter, dus ik zal deze optie meenemen in vraag 1D. Meer lagen zorgen voor een complexere architectuur waardoor de kans op overfitting toeneemt. Daarnaast kosten meer lagen ook gewoon meer computerkracht dus is het verstandig om klein te beginnen. <br>
 Er zijn 13 input features en 20 output classes, waar 16 tussen zit, dus ik zal de hidden_size daarmee beginnen. Het kan zijn dat 32 als hidden_size een betere prestatie oplevert, dus ik zal dit ook meenemen in vraag 1D. Ik verwacht dat de kans op overfitting toeneemt bij een hidden_size van 128 omdat het aantal parameters wat het model dan gebruikt sterk toeneemt. Omdat er dan mogelijk teveel focus wordt gelegd op de outliers in de data bestaat de kans dat het model te goed gaat werken op de trainset maar niet meer generaliseerd op de test set. <br>
