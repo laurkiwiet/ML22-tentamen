@@ -56,11 +56,12 @@ Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitlegg
 <br>
 <br>
 - Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.
-
-**Voor het maken van een GRU architectuur zijn er een aantal opties:**<br>
+<br>
+Voor het maken van een GRU architectuur zijn er een aantal opties:<br>
  In het onderstaande codevoorbeeld staat de GRU architectuur die ik ga gebruiken voor mijn model. Onder de code ligt ik het toe.<br>
 
-
+```
+{
   
   GRUmodel(nn.Module):
 
@@ -80,6 +81,9 @@ Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitlegg
         last_step = x[:, -1, :]
         yhat = self.linear(last_step)
         return yhat
+
+}
+```
 <br>
 Het gaat om een dataset met ongeveer 8000 regels met ieder 13 features waar 20 classes moet worden geclassificeerd. De dataset bestaat uit mensen (mannen en vrouwen) die een nummer van 0 tot 9 in het Arabisch uitspreken. Een GRU architectuur past hier dus goed bij omdat het om kan gaan met volordelijkheid in data door het geheugen en de gates. De data is in eerste instantie drie dimensionaal en bestaat uit; batchsize, sequence length en hidden size. <br>
 Die data gaat door het aantal GRU layers wat wordt aangegeven door de parameter num_layers. In eerste instantie verwacht ik dat 2 of 3 layers voldoende zijn. Dit komt omdat het een relatief kleine dataset is met maar 13 features en de kans op overfitten bij een complexer model groter wordt. <br>
@@ -119,8 +123,8 @@ Met een lineaire functie wordt er van 3 naar 2 dimensies gegaan. Een lineaire la
 ```
 <br>
 Ik verwacht dat 2 lagen voldoende zijn om een goed resultaat te bereiken, omdat het aantal features relatief laag is en het probleem niet al te complex is. Mogelijk werkt 1 of 3 lagen beter, dus ik zal deze beide opties meenemen in vraag 1D. Er zijn 13 input features en 20 output classes, waar 16 tussen zit, dus ik zal de hidden_size daarmee beginnen. Het kan zijn dat 32 als hidden_size een betere prestatie oplevert, dus ik zal dit ook meenemen in vraag 1D. Ik verwacht dat de kans op overfitting toeneemt bij een hidden_size van 64 of meer lagen.
-Voor de training settings wordt er begonnen met 20 epochs om te bekijken of dat voldoende is. Er wordt begonnen met een laag aantal epochs omdat ook een grote hoeveelheid epochs de kans op overfitten vergroot en simpelweg ook meer tijd kost.
-
+Voor de training settings wordt er begonnen met **NOG aanpassen** om te bekijken of dat voldoende is. Er wordt begonnen met een laag aantal epochs omdat ook een grote hoeveelheid epochs de kans op overfitten vergroot en simpelweg ook meer tijd kost.<br>
+<br>
 
 ### 1d
 Implementeer jouw veelbelovende model: 
@@ -133,33 +137,113 @@ Implementeer jouw veelbelovende model:
 
 <br>
 
-**Run 1: Hidden_size 128, drop_out 0.2, output 32, num_layers 3**
+**Run 1: 2 layers, hidden_size van 16 en drop_out 0.2**
 
+Ik heb de architectuur gebruikt zoals beschreven in 1C en dit levert de volgende resultaten op.
+Op de onderstaande afbeeldingen staan de loss grafieken van de test en train set uit Tensorboard.
+Het model lijkt na 50 epochs nog steeds nieuwe patronen te ontdekken omdat de lijn nog naar beneden gaat. Het model is dus nog niet aan het over- of underfitten.
 
 <figure>
   <p align = "center">
-    <img src="img/run 1.PNG" style="width:50%">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/Run 1 tensorboard.PNG" style="width:100%">
     <figcaption align="center">
-      <b> Figuur 1: resultaten run 1.</b>
+      <b> Figuur 1: Train vs Test loss run 1.</b>
     </figcaption>
   </p>
 </figure>
 
-**Ik heb 128 als hidden_size en 3 layers gebruikt. Het model is aan het overfitten. Daarom maak ik de drop_out hoger en maak ik het model simpeler met 1 lineaire laag, 3 num_layers en een hidden_size van 32. De verhouding tussen de loss op de train en validatieset is beter alleen de accuracy is nog niet zo hoog. Dit zou ik mogelijk kunnen verbeteren door meer epochs toe te voegen.**
 <br>
 
-**In de laatste optie heb ik num_layers op 3 gehouden en als input 64 genomen. De verhouding tussen de validation en train set blijft goed maar zijn alleen nog vrij hoog. Net als dat de accuracy nog steeds maar 85% is. Ik denk dat het model gewoon vaker getraind moet worden dus ik heb met dezelfde parameters met 50 epochs getraind i.p.v. 20. **
-
-Hieronder een voorbeeld hoe je een plaatje met caption zou kunnen invoegen.
+In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs.
+Het model lijkt na 50 epochs nog steeds te leren omdat de accuracy omhoog blijft gaan en loss op de validatie en train set ook steeds minder wordt. De verhouding tussen de loss op validatie en train is goed, de validatie op de train is iets lager wat betekent dat het model nog niet aan het over- of underfitten is. 
 
 <figure>
   <p align = "center">
-    <img src="img/motivational.png" style="width:50%">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/Run 1 dataframe.PNG" style="width:100%">
     <figcaption align="center">
-      <b> Fig 1.Een motivational poster voor studenten Machine Learning (Stable Diffusion)</b>
+      <b> Figuur 2: Train vs Test loss & Accuracy dataframe run 1</b>
     </figcaption>
   </p>
 </figure>
+
+
+<br>
+
+**Run 2: 2 layers, hidden_size van 32 en een dropout van 0.2**
+
+Omdat een accuracy van 80% nog niet zo hoog is en het model nog erg simpel was heb ik de hidden_size aangepast naar 32. Voor de rest heb ik het model laten staan zoals beschreven in 1C. Door de hidden size te vergroten zijn er voor het model meer parameters om de data goed te leren.
+
+Op de onderstaande afbeeldingen staan de loss grafieken van de test en train set uit Tensorboard.
+Het model lijkt na 20 epochs iets minder snel te verbeteren. 
+
+<figure>
+  <p align = "center">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/run 2 tensorboard.PNG" style="width:100%">
+    <figcaption align="center">
+      <b> Figuur 3: Train vs Test loss run 2.</b>
+    </figcaption>
+  </p>
+</figure>
+
+<br>
+
+In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs.
+Het model lijkt na 50 epochs nog steeds te leren omdat de accuracy omhoog blijft gaan en loss op de validatie en train set ook steeds minder wordt. De verhouding tussen de loss op validatie en train is goed, de validatie op de train is iets lager wat betekent dat het model nog niet aan het over- of underfitten is. 
+
+<figure>
+  <p align = "center">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/run 2 dataframe.PNG" style="width:100%">
+    <figcaption align="center">
+      <b> Figuur 4: Train vs Test loss & Accuracy dataframe run 2</b>
+    </figcaption>
+  </p>
+</figure>
+
+De accuracy van het model is sterk verbeterd ten opzichte van een model met 16 als hidden size. Het toevoegen van die parameters heeft dus zin. Het is nu relatief een simpel model met 32 als hidden size en 2 lagen, daarmee wordt al een accuraatheid behaald van 91%. De verhouding tussen de loss op de test en trainset is ook goed. De loss op de trainset mag iets hoger zijn dan op de testset maar als het teveel uit elkaar loopt dan is het model aan het overfitten. Zoals benoemd bij de grafiek lijkt het model na 20 epochs iets minder snel te verbeteren maar ook in de laatste 30 epochs neemt de loss op de testset nog iets af en de accuracy toe. 
+
+
+<br>
+
+**Run 3: 3 layers, hidden_size van 32 en dropout van 0.2**
+
+Om uit te proberen wat 3 lagen betekent voor dit model heb ik het aantal layers op 3 gezet. Ik heb de hidden size laten staan op 32 omdat dit goed werkte in de vorige run. Het model is dus iets complexer dan bij de eerste run en heeft meer parameters om van te leren. 
+
+
+Op de onderstaande afbeeldingen staan de loss grafieken van de test en train set uit Tensorboard. 
+Het lijkt erop alsof het model nu begint met overfitten. De loss op de train neemt af ten opzichte van run 2 (geel).
+
+<figure>
+  <p align = "center">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/Run 3 tensorboard.PNG" style="width:100%">
+    <figcaption align="center">
+      <b> Figuur 5: Train vs Test loss run 3.</b>
+    </figcaption>
+  </p>
+</figure>
+
+<br>
+
+In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs.
+
+
+<figure>
+  <p align = "center">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/run 3 dataframe.PNG" style="width:100%">
+    <figcaption align="center">
+      <b> Figuur 6: Train vs Test loss & Accuracy dataframe run 3</b>
+    </figcaption>
+  </p>
+</figure>
+
+In de bovenstaande tabel wordt duidelijk dat in de laatste 20 epochs de loss op de test set nauwelijks omlaag is gegaan en de loss op de trainset duidelijk wel. De learning rate gaat ook omlaag wat duid op een plateau en overfitten. 
+
+
+**Conclusie**
+
+Een simpel model is waarschijnlijk beter dan een heel complex model voor dit probleem. Met relatief weinig lagen, 1 of 2 wordt er al een redelijke hoge accuracy behaald. Waarschijnlijk wordt dit nog verbeterd met het hypertunen van de learning rate. 
+
+
+
 
 ## Vraag 2
 Een andere collega heeft alvast een hypertuning opgezet in `dev/scripts/02_tune.py`.
