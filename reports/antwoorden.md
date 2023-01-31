@@ -122,7 +122,7 @@ Met een lineaire functie wordt er van 3 naar 2 dimensies gegaan. Een lineaire la
 ```
 <br>
 Ik verwacht dat 2 lagen voldoende is om een goed resultaat te bereiken, omdat het aantal features relatief laag is en het probleem niet heel complex is. Mogelijk werkt 3 lagen beter, dus ik zal deze optie meenemen in vraag 1D. Meer lagen zorgen voor een complexere architectuur waardoor de kans op overfitting toeneemt. Daarnaast kosten meer lagen ook gewoon meer computerkracht dus is het verstandig om klein te beginnen. <br>
-Er zijn 13 input features en 20 output classes, waar 16 tussen zit, dus ik zal de hidden_size daarmee beginnen. Het kan zijn dat 32 als hidden_size een betere prestatie oplevert, dus ik zal dit ook meenemen in vraag 1D. Ik verwacht dat de kans op overfitting toeneemt bij een hidden_size van 128 omdat het aantal parameters wat het model dan gebruikt sterk toeneemt. Omdat er dan mogelijk teveel focus wordt gelegd op de outliers in de data bestaat de kans dat het model te goed gaat werken op de trainset maar niet meer generaliseerd op de testset. <br>
+Er zijn 13 input features en 20 output classes, waar 16 tussen zit, dus ik zal de hidden_size daarmee beginnen. Het kan zijn dat 32 als hidden_size een betere prestatie oplevert, dus ik zal dit ook meenemen in vraag 1D. Ik verwacht dat de kans op overfitting toeneemt bij een hidden_size van 128 omdat het aantal parameters wat het model dan gebruikt sterk toeneemt. Omdat er dan mogelijk teveel focus wordt gelegd op de outliers in de data bestaat de kans dat het model te goed gaat werken op de trainset maar niet meer generaliseerd op de test set. <br>
 Voor de training settings wordt er begonnen met 50 epochs om te bekijken of het model blijft leren of dat een lager aantal beter is. Ik verwacht dat minder voldoende gaat zijn omdat het aantal epochs dat een model nodig heeft om goed te leren ook samenhangt met de complexiteit van de taak. Daarnaast hangt het ook af van de architectuur, met 2 lagen en 16 als hidden size is mogelijk 20 epochs genoeg om tot een goede accuracy te komen. Door nu te testen met 50 epochs kan worden achterhaald op welk punt in de epochs het model stopt met het maken van verbeteringen.<br> 
 De learningrate blijft staan op 1-e3 om te bekijken of dit voldoende werkt met de archictectuur.<br>
 <br>
@@ -138,7 +138,7 @@ Implementeer jouw veelbelovende model:
 
 <br>
 
-**Run 1: 2 layers, hidden_size van 16 en drop_out 0.2**
+**Run 1: 2 layers, hidden_size van 16 en drop_out 0.2 (roze lijn)**
 
 Ik heb voor de eerste run de architectuur gebruikt zoals beschreven in 1C.
 Op de onderstaande afbeeldingen staan de loss grafieken van de test en train set uit Tensorboard.
@@ -148,7 +148,8 @@ Het model lijkt na 50 epochs nog steeds nieuwe patronen te ontdekken omdat de li
   <p align = "center">
     <img src="/home/azureuser/code/ML22-tentamen/reports/img/Run 1 tensorboard.PNG" style="width:100%">
     <figcaption align="center">
-      <b> Figuur 1: Train vs Test loss run 1.</b>
+      <b> Figuur 1: Train vs Test loss run 1.</b><br>
+      <i> Run 1: roze | Run 2: geel | Run 3: paars</i>
     </figcaption>
   </p>
 </figure>
@@ -156,7 +157,6 @@ Het model lijkt na 50 epochs nog steeds nieuwe patronen te ontdekken omdat de li
 <br>
 
 In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs.
-Het model lijkt na 50 epochs nog steeds te leren omdat de accuracy omhoog blijft gaan en loss op de validatie en train set ook steeds minder wordt. De verhouding tussen de loss op validatie en train is goed, de validatie op de train is iets lager wat betekent dat het model nog niet aan het over- of underfitten is. 
 
 <figure>
   <p align = "center">
@@ -166,22 +166,25 @@ Het model lijkt na 50 epochs nog steeds te leren omdat de accuracy omhoog blijft
     </figcaption>
   </p>
 </figure>
+Het model lijkt na 50 epochs nog steeds te leren omdat de accuracy omhoog blijft gaan en loss op de validatie en train set ook steeds minder wordt. De verhouding tussen de loss op validatie en train is goed, de validatie op de train is iets lager wat betekent dat het model nog niet aan het over- of underfitten is. Wel is de accuracy met bijna 80% nog niet zo heel hoog. Daarom ga ik in de volgende run de hidden size naar 32 zetten zodat er meer parameters zijn die worden meegenomen in het model.
+
 
 
 <br>
 
 **Run 2: 2 layers, hidden_size van 32 en een dropout van 0.2**
 
-Omdat een accuracy van 80% nog niet zo hoog is en het model nog erg simpel was heb ik de hidden_size aangepast naar 32. Voor de rest heb ik het model laten staan zoals beschreven in 1C. Door de hidden size te vergroten zijn er voor het model meer parameters om de data goed te leren.
+Omdat een accuracy van 80% nog niet zo hoog is en het model nog erg simpel was heb ik de hidden_size aangepast naar 32. Voor de rest heb ik het model laten staan zoals beschreven in 1C. 
 
 Op de onderstaande afbeeldingen staan de loss grafieken van de test en train set uit Tensorboard.
-Het model lijkt na 20 epochs iets minder snel te verbeteren. 
+Het model lijkt na 20 epochs iets minder snel te verbeteren omdat de lijn minder stijl naar beneden gaat, mogelijk is er voldoende resultaat ergens tussen de 20 en 30 epochs. 
 
 <figure>
   <p align = "center">
     <img src="/home/azureuser/code/ML22-tentamen/reports/img/run 2 tensorboard.PNG" style="width:100%">
     <figcaption align="center">
-      <b> Figuur 3: Train vs Test loss run 2.</b>
+      <b> Figuur 3: Train vs Test loss run 2.</b><br>
+      <i> Run 1: roze | Run 2: geel | Run 3: paars</i>
     </figcaption>
   </p>
 </figure>
@@ -189,7 +192,7 @@ Het model lijkt na 20 epochs iets minder snel te verbeteren.
 <br>
 
 In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs.
-Het model lijkt na 50 epochs nog steeds te leren omdat de accuracy omhoog blijft gaan en loss op de validatie en train set ook steeds minder wordt. De verhouding tussen de loss op validatie en train is goed, de validatie op de train is iets lager wat betekent dat het model nog niet aan het over- of underfitten is. 
+
 
 <figure>
   <p align = "center">
@@ -200,24 +203,25 @@ Het model lijkt na 50 epochs nog steeds te leren omdat de accuracy omhoog blijft
   </p>
 </figure>
 
-De accuracy van het model is sterk verbeterd ten opzichte van een model met 16 als hidden size. Het toevoegen van die parameters heeft dus zin. Het is nu relatief een simpel model met 32 als hidden size en 2 lagen, daarmee wordt al een accuraatheid behaald van 91%. De verhouding tussen de loss op de test en trainset is ook goed. De loss op de trainset mag iets hoger zijn dan op de testset maar als het teveel uit elkaar loopt dan is het model aan het overfitten. Zoals benoemd bij de grafiek lijkt het model na 20 epochs iets minder snel te verbeteren maar ook in de laatste 30 epochs neemt de loss op de testset nog iets af en de accuracy toe. 
+De accuracy van het model is sterk verbeterd ten opzichte van een model met 16 als hidden size. Het toevoegen van die parameters heeft dus zin. Het is nu relatief een simpel model met 32 als hidden size en 2 lagen, daarmee wordt al een accuraatheid behaald van 91%. De verhouding tussen de loss op de test en trainset is ook goed. De loss op de trainset mag iets hoger zijn dan op de test set maar als het teveel uit elkaar loopt dan is het model aan het overfitten. Zoals benoemd bij de grafiek lijkt het model na 20 epochs iets minder snel te verbeteren maar ook in de laatste 30 epochs neemt de loss op de test set nog iets af en de accuracy toe. 
 
 
 <br>
 
 **Run 3: 3 layers, hidden_size van 32 en dropout van 0.2**
 
-Om uit te proberen wat 3 lagen betekent voor dit model heb ik het aantal layers op 3 gezet. Ik heb de hidden size laten staan op 32 omdat dit goed werkte in de vorige run. Het model is dus iets complexer dan bij de eerste run en heeft meer parameters om van te leren. 
+Door een extra laag toe te voegen aan het model wordt de GRU laag een extra keer doorlopen. Dit kan betekenen dat de accuracy omhoog gaat maar het kan ook betekenen dat de kans op overfitting groter wordt. Ik heb de hidden size laten staan op 32 omdat dit voor een flinke verbetering in accuracy zorgde in de vorige run. Het model is dus iets complexer dan bij de eerste run en heeft meer parameters om van te leren. 
 
 
-Op de onderstaande afbeeldingen staan de loss grafieken van de test en train set uit Tensorboard. 
-Het lijkt erop alsof het model nu begint met overfitten. De loss op de train neemt af ten opzichte van run 2 (geel).
+Op de onderstaande afbeeldingen staan de loss grafieken van de test en train set uit Tensorboard. <br>
+Het lijkt erop alsof het model nu begint met overfitten. Wanneer je de lijnen van run 2 en 3 vergelijkt dan zie je dat de loss op de train set iets verbeterd maar de loss op de test set eigenlijk niet verbeterd na het doorlopen van 50 epochs. De loss op de test set is rond 30 epochs wel aanzienlijk minder dan bij de tweede run. Het kan dus ook zijn dat de combinatie van 3 lagen en 50 epochs zorgt voor overfitten maar een model met 3 lagen en 30 epochs niet. 
 
 <figure>
   <p align = "center">
     <img src="/home/azureuser/code/ML22-tentamen/reports/img/Run 3 tensorboard.PNG" style="width:100%">
     <figcaption align="center">
-      <b> Figuur 5: Train vs Test loss run 3.</b>
+      <b> Figuur 5: Train vs Test loss run 3.</b> <br>
+      <i> Run 1: roze | Run 2: geel | Run 3: paars</i>
     </figcaption>
   </p>
 </figure>
@@ -241,8 +245,7 @@ In de bovenstaande tabel wordt duidelijk dat in de laatste 20 epochs de loss op 
 
 **Conclusie**
 
-Een simpel model is waarschijnlijk beter dan een heel complex model voor dit probleem. Met relatief weinig lagen, 1 of 2 wordt er al een redelijke hoge accuracy behaald. Waarschijnlijk wordt dit nog verbeterd met het hypertunen van de learning rate. 
-
+Een simpel model is waarschijnlijk beter dan een heel complex model voor dit probleem. Met 2 of 3 lagen en lage hiden size wordt er al rond de 90% accuracy behaald. Omdat het model tijdens de laatste run aan het overfitten is en bij de eerste run na 50 epochs nog aan het leren was neem ik de learning rate mee als hypertune parameter. Een goed passende learning rate zorgt ervoor dat het model op de juiste snelheid kan leren en overfitting kan voorkomen. 
 
 
 
@@ -259,9 +262,8 @@ Implementeer de hypertuning voor jouw architectuur:
 - Licht je keuzes toe: wat hypertune je, en wat niet? Waarom? En in welke ranges zoek je, en waarom? Zie ook de [docs van ray over search space](https://docs.ray.io/en/latest/tune/api_docs/search_space.html#tune-sample-docs) en voor [rondom search algoritmes](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#bohb-tune-search-bohb-tunebohb) voor meer opties en voorbeelden.<br>
 
 <br>
-Ik heb mijn model niet aangepast. Ik wilde early stopping voor de learning rate gaan toevoegen omdat ik in vraag 1D dus een plateau heb bereikt.  Maar na even zoeken kwam ik erachter dat er al early stopping aan toegevoegd is:<br>
-   
-Daarom heb ik de settingsfile een classs ‘GruSearchSpace’ aangemaakt met de volgende settings:<br>
+
+Ik heb in de settingsfile een class ‘GruSearchSpace’ aangemaakt met de volgende settings:<br>
 
 ```
 {
@@ -274,11 +276,12 @@ class GruSearchSpace(BaseSearchSpace):
 ```
 
 <br>
-Ik wil minimaal 1 layer en maximaal 4. Bij vraag 1D leek 3 layers al teveel te zijn. Echter was dit in combinatie met een hidden_size van 32, mogelijk kunnen 3 of 4 lagen wel werken met een minder grote hidden_size. De drop_out mag ergens tussen de 0 en de 0.5 zijn. Ik verwacht dat 0.5 aan de hoge kant is en dat er teveel data verloren gaat. Maar mogelijk kan het in combinatie met een hoog aantal layers en hidden_size wel werken. Ik ben ook benieuwd wat verschillende learning rates gaan doen. Omdat een GRU relatief gezien complex is ten opzichte van normale RNN’s zet ik de learning rate tussen 1e-5 en de 1e-3. Door de learning rate lager in te zetten kan het model mogelijk beter omgaan met onbekende data.<br>
+Ik wil minimaal 1 layer en maximaal 4. Bij vraag 1D leek 3 layers al teveel te zijn. Echter was dit in combinatie met een hidden_size van 32 en 50 epochs, mogelijk kunnen 3 of 4 lagen wel werken met een minder grote hidden_size.<br> De drop_out mag ergens tussen de 0 en de 0.5 zijn. Ik verwacht dat 0.5 aan de hoge kant is en dat er teveel data verloren gaat. Maar mogelijk kan het in combinatie met een hoog aantal layers en hidden_size wel werken omdat er dan meer parameters.<br> Ik ben ook benieuwd wat verschillende learning rates gaan doen. Omdat een GRU relatief gezien complex is ten opzichte van normale RNN’s zet ik de learning rate tussen 1e-5 en de 1e-3. Door de learning rate lager in te zetten kan het model mogelijk beter omgaan met onbekende data.<br>
 <br>
-Ik ga niet met verschillende loss functions werken. Dit is omdat cross entropy loss goed werkt met classificaties en het aantal classes wat hier worden voorspeld. Ik ga ook niet verschillende optimizers proberen omdat Adam over het algemeen goed werkt met de range aan learning rates. Ik ga ook niet proberen om de structuur van het model aan te passen, bijvoorbeeld door een extra lineare layer toe te voegen omdat tijdens de test in 1D er al een redelijk goed resultaat behaald werd, het model hoeft dus niet complexer te worden gemaakt.  <br>
+Ik ga niet met verschillende loss functions werken. Dit is omdat cross entropy loss goed werkt met classificaties en het aantal classes dat moet worden voorspeld. <br>Ik ga ook niet verschillende optimizers proberen omdat Adam over het algemeen goed werkt met de range aan learning rates.<br> Ik ga het aantal epochs ook niet meenemen als hypertune parameter. Ik ga voor een vast aantal epochs van 30, tijdens de runs van vraag 1C leek het namelijk dat er na 30 epochs veel minder wordt geleerd.  <br>
 
 <br>
+
 
 ### 2b
 - Analyseer de resultaten van jouw hypertuning; visualiseer de parameters van jouw hypertuning en sla het resultaat van die visualisatie op in `reports/img`. Suggesties: `parallel_coordinates` kan handig zijn, maar een goed gekozen histogram of scatterplot met goede kleuren is in sommige situaties duidelijker! Denk aan x en y labels, een titel en units voor de assen.
@@ -286,6 +289,8 @@ Ik ga niet met verschillende loss functions werken. Dit is omdat cross entropy l
 
 Importeer de afbeeldingen in jouw antwoorden, reflecteer op je experiment, en geef een interpretatie en toelichting op wat je ziet.<br>
 <br>
+
+**Test vs. Train loss & Accuracy**
 
 Ik ben begonnen met kijken naar de loss op test vs de train en de accuracy van de verschillende modellen.
 <figure>
@@ -297,8 +302,10 @@ Ik ben begonnen met kijken naar de loss op test vs de train en de accuracy van d
   </p>
 </figure>
 <br>
-Er zijn ongeveer 3 modellen met goede resultaten en een hoge accuracy. Deze modellen hebben ook een lage loss op de test set. Wat ook fijn is is dat die loss op zowel de train als de test set dicht bij elkaar licht. Dit betekent dat het model niet aan het overfitten is. <br>
+Er zijn ongeveer 3 modellen met goede resultaten en een hoge accuracy. Deze modellen hebben zowel een lage loss op de test als trainset. Ook zit de loss van de test en train set van deze modellen niet te ver van elkaar vandaa. Dit betekent dat het model niet aan het overfitten is. <br>
 <br>
+
+**Hypertune parameters**
 
 Vervolgens ben ik gaan kijken hoe de verschillende hypertune parameters zich tot elkaar verhouden.<br>
 <figure>
@@ -311,15 +318,20 @@ Vervolgens ben ik gaan kijken hoe de verschillende hypertune parameters zich tot
 </figure> 
 <br>
 <br>
-Hidden_size vs learning rate<br>
+
+**learning rate**<br>
 De standaard learning rate is 1-e3. Wat opvalt is dat een iets snellere learning rate beter werkt. De modellen die het beter hebben gedaan liggen ongeveer tussen de 1-e4 en 1-e5. Een combinatie van een iets snellere learning rate met een hoog aantal neurons om mee te nemen in de hidden_size werkt het best voor dit model. <br>
 <br>
-Num_layers<br>
-Het beste lijkt 3 lagen. In modellen die met 3 lagen zijn gedraaid zitten 2 van de 3 beste modellen er zitten veruit de minst slechtste modellen in. 1 of 2 lagen lijken echt te weinig om een goed model mee te maken. Wat ik van te voren niet had verwacht en wat ook niet overeenkomt met de testen uit 1D, waarbij ik toch met een lage hidden_size en 1 of 2 lagen een hogere accuracy had dan bij het hypertunen. Mogelijk zou meer lagen ook nog kunnen werken maar aangezien de maximale accuraatheid bij 3 layers al 95% is het niet nodig om het model nog complexer te maken.<br>
+**Num_layers**<br>
+Drie komt als beste aantal uit de hypertune sessie. Twee van de drie modellen met de hoogste accuracy hebben drie lagen. Eén of twee lagen lijkt echt te weinig om een goed model mee te maken. Wat ik van te voren niet had verwacht en wat ook niet overeenkomt met de testen uit 1D, waarbij ik toch met een lage hidden_size en 1 of 2 lagen een hogere accuracy had dan bij het hypertunen. Mogelijk zou meer lagen ook nog kunnen werken maar aangezien de maximale accuraatheid bij 3 lagen al 95% is, is het niet nodig om het model nog complexer te maken.<br>
 <br>
-Drop_out vs aantal_layers<br>
-Wat opvallend is is dat een lagere drop_out goed werkt met 4 lagen en een iets hogere drop_out juist met 3 lagen. Dit is voor mijn gevoel tegenstrijdig en het model zou denk ik juist beter moeten werken met een hogere drop_out bij meer lagen. De drop_out moet in ieder geval niet hoger zijn dan 0,3 en werkt het best met een hidden_size van meer dan 120. <br>
+**Drop_out**<br>
+Wat opvallend is is dat een lagere drop_out goed werkt met 4 lagen en een iets hogere drop_out juist met 3 lagen. Dit is voor mijn gevoel tegenstrijdig omdat het model juist beter zou moeten werken met een hogere drop_out bij meer lagen, omdat er dan meer parameters zijn is het minder erg als daarvan een aantal worden gedropt. De drop_out moet in ieder geval niet hoger zijn dan 0,3 en werkt het best met een hidden_size van meer dan 120. <br>
 <br>
+**Hidden_size**<br>
+De modellen met een hoge accuracy hebben allemaal ongeveer 120 als hidden size. Dit had ik niet verwacht en komt ook niet overeen met de runs uit 1D. <br>
+<br>
+
 
 
 ### 2c
@@ -332,15 +344,19 @@ Het best preseterende model heeft de volgende settings:
 {'input': 13, 'output': 20, 'tunedir': PosixPath('/home/azureuser/code/ML22-tentamen/logs'), 'num_layers': 3, 'hidden_size': 123, 'dropout': 0.1751047741607852, 'learning_rate': 0.0005222678011122521}
 ```
 <br>
-Om te achterhalen wat het beste aantal Epochs is heb ik deze run in een grafiek gezet.
+Om te achterhalen wat het beste aantal Epochs is heb ik deze run in een grafiek gezet. Op deze manier wil ik achterhalen op welke epoch de loss op de test het laagst was en de accuracy het hoogst.
 <figure>
   <p align = "center">
     <img src="/home/azureuser/code/ML22-tentamen/reports/img/epochs.png" style="width:100%">
     <figcaption align="center">
-      <b> Figuur 9: Accuracy & min loss per epoch</b>
+      <b> Figuur 9: Accuracy & min loss per epoch</b><br>
+      <i> Met Max accuracy & Min test loss waarde</i>
     </figcaption>
   </p>
 </figure> 
+
+In de bovenstaande grafiek is te zien dat de accuracy het hoogst ligt in epoch 28. De loss op de test set is in epoch 23 het laagst. Epoch 23 had na epoch 28 de hoogste accuracy en daarom heb ik het aantal epochs op 23 gezet.<br>
+In de settings file heb ik de settings van het beste model overgenomen en daarmee kom ik uit op een accuracy van 92%
 
 
 
