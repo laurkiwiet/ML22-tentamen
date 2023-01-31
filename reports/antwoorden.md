@@ -183,7 +183,7 @@ In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs
 
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/Run 1 dataframe.PNG" style="width:100%">
+    <img src="Run 1 dataframe.PNG" style="width:100%">
     <figcaption align="center">
       <b> Figuur 2: Train vs Test loss & Accuracy dataframe run 1</b>
     </figcaption>
@@ -204,7 +204,7 @@ Het model lijkt na 20 epochs iets minder snel te verbeteren omdat de lijn minder
 
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/run 2 tensorboard.PNG" style="width:100%">
+    <img src="img/run 2 tensorboard.PNG" style="width:100%">
     <figcaption align="center">
       <b> Figuur 3: Train vs Test loss run 2.</b><br>
       <i> Run 1: roze | Run 2: geel | Run 3: paars</i>
@@ -219,7 +219,7 @@ In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs
 
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/run 2 dataframe.PNG" style="width:100%">
+    <img src="img/run 2 dataframe.PNG" style="width:100%">
     <figcaption align="center">
       <b> Figuur 4: Train vs Test loss & Accuracy dataframe run 2</b>
     </figcaption>
@@ -241,7 +241,7 @@ Het lijkt erop alsof het model nu begint met overfitten. Wanneer je de lijnen va
 
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/Run 3 tensorboard.PNG" style="width:100%">
+    <img src="img/Run 3 tensorboard.PNG" style="width:100%">
     <figcaption align="center">
       <b> Figuur 5: Train vs Test loss run 3.</b> <br>
       <i> Run 1: roze | Run 2: geel | Run 3: paars</i>
@@ -256,7 +256,7 @@ In de onderstaande afbeelding staan de waarden van runs van de laatste 20 epochs
 
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/run 3 dataframe.PNG" style="width:100%">
+    <img src="img/run 3 dataframe.PNG" style="width:100%">
     <figcaption align="center">
       <b> Figuur 6: Train vs Test loss & Accuracy dataframe run 3</b>
     </figcaption>
@@ -326,7 +326,7 @@ Importeer de afbeeldingen in jouw antwoorden, reflecteer op je experiment, en ge
 Ik ben begonnen met kijken naar de loss op test vs de train en de accuracy van de verschillende modellen.
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/train&testLoss.png" style="width:100%">
+    <img src="img/train&testLoss.png" style="width:100%">
     <figcaption align="center">
       <b> Figuur 7: Train vs Test loss & Accuracy hypertunen</b>
     </figcaption>
@@ -341,7 +341,7 @@ Er zijn ongeveer 3 modellen met goede resultaten en een hoge accuracy. Deze mode
 Vervolgens ben ik gaan kijken hoe de verschillende hypertune parameters zich tot elkaar verhouden.<br>
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/hypertuneparameters.png" style="width:100%">
+    <img src="img/hypertuneparameters.png" style="width:100%">
     <figcaption align="center">
       <b> Figuur 8: Hypertune parameters & Accuracy hypertunen</b>
     </figcaption>
@@ -378,7 +378,7 @@ Het best preseterende model heeft de volgende settings:
 Om te achterhalen wat het beste aantal Epochs is heb ik deze run in een grafiek gezet. Op deze manier wil ik achterhalen op welke epoch de loss op de test het laagst was en de accuracy het hoogst.
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/epochs.png" style="width:100%">
+    <img src="img/epochs.png" style="width:100%">
     <figcaption align="center">
       <b> Figuur 9: Accuracy & min loss per epoch</b><br>
       <i> Met Max accuracy & Min test loss waarde</i>
@@ -392,7 +392,7 @@ In de settings file heb ik de settings van het beste model overgenomen, de makef
 De loss grafieken van de laatste run. <br>
 <figure>
   <p align = "center">
-    <img src="/home/azureuser/code/ML22-tentamen/reports/img/Final run tensorboard.PNG" style="width:100%">
+    <img src="img/Final run tensorboard.PNG" style="width:100%">
     <figcaption align="center">
       <b> Figuur 10:  Train vs Test loss laatste run.</b><br>
     </figcaption>
