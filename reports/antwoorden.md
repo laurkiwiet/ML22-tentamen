@@ -255,18 +255,94 @@ Implementeer de hypertuning voor jouw architectuur:
 - Stel dat je
 - voeg jouw model in op de juiste plek in de `tune.py` file.
 - maak een zoekruimte aan met behulp van pydantic (naar het voorbeeld van LinearSearchSpace), maar pas het aan voor jouw model.
-- Licht je keuzes toe: wat hypertune je, en wat niet? Waarom? En in welke ranges zoek je, en waarom? Zie ook de [docs van ray over search space](https://docs.ray.io/en/latest/tune/api_docs/search_space.html#tune-sample-docs) en voor [rondom search algoritmes](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#bohb-tune-search-bohb-tunebohb) voor meer opties en voorbeelden.
+- Licht je keuzes toe: wat hypertune je, en wat niet? Waarom? En in welke ranges zoek je, en waarom? Zie ook de [docs van ray over search space](https://docs.ray.io/en/latest/tune/api_docs/search_space.html#tune-sample-docs) en voor [rondom search algoritmes](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#bohb-tune-search-bohb-tunebohb) voor meer opties en voorbeelden.<br>
+
+<br>
+Ik heb mijn model niet aangepast. Ik wilde early stopping voor de learning rate gaan toevoegen omdat ik in vraag 1D dus een plateau heb bereikt.  Maar na even zoeken kwam ik erachter dat er al early stopping aan toegevoegd is:<br>
+   
+Daarom heb ik de settingsfile een classs ‘GruSearchSpace’ aangemaakt met de volgende settings:<br>
+
+```
+{
+class GruSearchSpace(BaseSearchSpace):
+    num_layers: Union[int, SAMPLE_INT] = tune.randint(1, 5)
+    hidden_size: Union[int, SAMPLE_INT] = tune.randint(16, 128)
+    dropout: Union[float, SAMPLE_FLOAT] = tune.uniform(0.0, 0.5)
+    learning_rate: Union[float, SAMPLE_FLOAT] = tune.uniform(0.0001, 0.001)
+}
+```
+
+<br>
+Ik wil minimaal 1 layer en maximaal 4. Bij vraag 1D leek 3 layers al teveel te zijn. Echter was dit in combinatie met een hidden_size van 32, mogelijk kunnen 3 of 4 lagen wel werken met een minder grote hidden_size. De drop_out mag ergens tussen de 0 en de 0.5 zijn. Ik verwacht dat 0.5 aan de hoge kant is en dat er teveel data verloren gaat. Maar mogelijk kan het in combinatie met een hoog aantal layers en hidden_size wel werken. Ik ben ook benieuwd wat verschillende learning rates gaan doen. Omdat een GRU relatief gezien complex is ten opzichte van normale RNN’s zet ik de learning rate tussen 1e-5 en de 1e-3. Door de learning rate lager in te zetten kan het model mogelijk beter omgaan met onbekende data.<br>
+<br>
+Ik ga niet met verschillende loss functions werken. Dit is omdat cross entropy loss goed werkt met classificaties en het aantal classes wat hier worden voorspeld. Ik ga ook niet verschillende optimizers proberen omdat Adam over het algemeen goed werkt met de range aan learning rates. Ik ga ook niet proberen om de structuur van het model aan te passen, bijvoorbeeld door een extra lineare layer toe te voegen omdat tijdens de test in 1D er al een redelijk goed resultaat behaald werd, het model hoeft dus niet complexer te worden gemaakt.  <br>
+
+<br>
 
 ### 2b
 - Analyseer de resultaten van jouw hypertuning; visualiseer de parameters van jouw hypertuning en sla het resultaat van die visualisatie op in `reports/img`. Suggesties: `parallel_coordinates` kan handig zijn, maar een goed gekozen histogram of scatterplot met goede kleuren is in sommige situaties duidelijker! Denk aan x en y labels, een titel en units voor de assen.
 - reflecteer op de hypertuning. Wat werkt wel, wat werkt niet, wat vind je verrassend, wat zijn trade-offs die je ziet in de hypertuning, wat zijn afwegingen bij het kiezen van een uiteindelijke hyperparametersetting.
 
-Importeer de afbeeldingen in jouw antwoorden, reflecteer op je experiment, en geef een interpretatie en toelichting op wat je ziet.
+Importeer de afbeeldingen in jouw antwoorden, reflecteer op je experiment, en geef een interpretatie en toelichting op wat je ziet.<br>
+<br>
+
+Ik ben begonnen met kijken naar de loss op test vs de train en de accuracy van de verschillende modellen.
+<figure>
+  <p align = "center">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/train&testLoss.png" style="width:100%">
+    <figcaption align="center">
+      <b> Figuur 7: Train vs Test loss & Accuracy hypertunen</b>
+    </figcaption>
+  </p>
+</figure>
+<br>
+Er zijn ongeveer 3 modellen met goede resultaten en een hoge accuracy. Deze modellen hebben ook een lage loss op de test set. Wat ook fijn is is dat die loss op zowel de train als de test set dicht bij elkaar licht. Dit betekent dat het model niet aan het overfitten is. <br>
+<br>
+
+Vervolgens ben ik gaan kijken hoe de verschillende hypertune parameters zich tot elkaar verhouden.<br>
+<figure>
+  <p align = "center">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/hypertuneparameters.png" style="width:100%">
+    <figcaption align="center">
+      <b> Figuur 8: Hypertune parameters & Accuracy hypertunen</b>
+    </figcaption>
+  </p>
+</figure> 
+<br>
+<br>
+Hidden_size vs learning rate<br>
+De standaard learning rate is 1-e3. Wat opvalt is dat een iets snellere learning rate beter werkt. De modellen die het beter hebben gedaan liggen ongeveer tussen de 1-e4 en 1-e5. Een combinatie van een iets snellere learning rate met een hoog aantal neurons om mee te nemen in de hidden_size werkt het best voor dit model. <br>
+<br>
+Num_layers<br>
+Het beste lijkt 3 lagen. In modellen die met 3 lagen zijn gedraaid zitten 2 van de 3 beste modellen er zitten veruit de minst slechtste modellen in. 1 of 2 lagen lijken echt te weinig om een goed model mee te maken. Wat ik van te voren niet had verwacht en wat ook niet overeenkomt met de testen uit 1D, waarbij ik toch met een lage hidden_size en 1 of 2 lagen een hogere accuracy had dan bij het hypertunen. Mogelijk zou meer lagen ook nog kunnen werken maar aangezien de maximale accuraatheid bij 3 layers al 95% is het niet nodig om het model nog complexer te maken.<br>
+<br>
+Drop_out vs aantal_layers<br>
+Wat opvallend is is dat een lagere drop_out goed werkt met 4 lagen en een iets hogere drop_out juist met 3 lagen. Dit is voor mijn gevoel tegenstrijdig en het model zou denk ik juist beter moeten werken met een hogere drop_out bij meer lagen. De drop_out moet in ieder geval niet hoger zijn dan 0,3 en werkt het best met een hidden_size van meer dan 120. <br>
+<br>
+
 
 ### 2c
-- Zorg dat jouw prijswinnende settings in een config komen te staan in `settings.py`, en train daarmee een model met een optimaal aantal epochs, daarvoor kun je `01_model_design.py` kopieren en hernoemen naar `2c_model_design.py`.
+- Zorg dat jouw prijswinnende settings in een config komen te staan in `settings.py`, en train daarmee een model met een optimaal aantal epochs, daarvoor kun je `01_model_design.py` kopieren en hernoemen naar `2c_model_design.py`.<br>
+<br>
 
-<iframe src="/home/azureuser/code/ML22-tentamen/reports/img/epochs.html" width="100%" height="500"></iframe>
+Prijswinnende settings<br>
+Het best preseterende model heeft de volgende settings:
+```
+{'input': 13, 'output': 20, 'tunedir': PosixPath('/home/azureuser/code/ML22-tentamen/logs'), 'num_layers': 3, 'hidden_size': 123, 'dropout': 0.1751047741607852, 'learning_rate': 0.0005222678011122521}
+```
+<br>
+Om te achterhalen wat het beste aantal Epochs is heb ik deze run in een grafiek gezet.
+<figure>
+  <p align = "center">
+    <img src="/home/azureuser/code/ML22-tentamen/reports/img/epochs.png" style="width:100%">
+    <figcaption align="center">
+      <b> Figuur 9: Accuracy & min loss per epoch</b>
+    </figcaption>
+  </p>
+</figure> 
+
+
+
 
 ## Vraag 3
 ### 3a
