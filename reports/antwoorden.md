@@ -27,15 +27,15 @@ Er zijn ook een aantal nadelen:<br>
 <li>Lineaire modellen zijn vaak te simpel om echt de belangrijke patronen in de data te ontdekken</li>
 </ul>
 <br>
-Voor het probleem wat wordt gesteld is deze architectuur niet de juiste keuze. Omdat het om spraak data, tijdseries, gaat is het beter om een architectuur te kiezen die kan omgaan met volgordelijkheid in data en een geheugen heeft. De architectuur die gekozen is door de collega kan bijvoorbeeld wel geschikt zijn voor een simpele classificatie op basis van tubulaire data.<br>
+Voor het probleem wat wordt gesteld is deze architectuur niet de juiste keuze. Omdat het om spraak data, tijdseries, gaat is het beter om een architectuur te kiezen die kan omgaan met volgordelijkheid in data en een geheugen heeft. De architectuur die gekozen is kan bijvoorbeeld wel geschikt zijn voor een simpele classificatie op basis van tabulaire data.<br>
 <br>
 - Wat vind je van de keuzes die hij heeft gemaakt in de LinearConfig voor het aantal units ten opzichte van de data? En van de dropout?
 <br>
 <br>
 <ul>
-<li>H1=100; dit is best een groot aantal hidden_units om dit model mee te beginnen. De input is 13 dus het is beter om kleiner te beginnen, uit te testen en eventueel aan te passen. Ik zou zelf eerder beginnen met 32 of 64.</li>
+<li>H1=100; dit is best een groot aantal hidden units om dit model mee te beginnen. De input is 13 dus het is beter om kleiner te beginnen, uit te testen en eventueel aan te passen. Ik zou zelf eerder beginnen met 32 of 64.</li>
 <li>H2=10, de stap tussen 100 en 10 is best groot. Dit betekent dat het model in de tweede laag veel minder goed complexe patronen kan leren.</li>
-<li>Drop_out = 0.5 is ook wel heel hoog in deze architectuur. In de tweede laag wordt er al terug gegaan naar een hidden_size van 10, waarvan dan vervolgens ook nog 50% van op 0 worden gezet. Dit betekent dat het model niet goed complexe structuren kan leren. </li>
+<li>Drop_out = 0.5 is ook wel heel hoog in deze architectuur. In de tweede laag wordt er al terug gegaan naar een hidden size van 10, waarvan dan vervolgens ook nog 50% van op 0 worden gezet. Dit betekent dat het model niet goed complexe structuren kan leren. </li>
 <br>
 
 ## 1b
@@ -55,10 +55,10 @@ Omdat jij de cursus Machine Learning hebt gevolgd kun jij hem uitstekend uitlegg
 <br>Voor dit probleem is een recurrent neural network de beste optie. Dit is omdat RNN's goed kunnen omgaan met volgordelijkheid in datasets. RNN's bewaren namelijk informatie uit de vorige laag in tegenstelling tot het netwerk die als voorbeeld is gemaakt waarbij de informatie per stap opnieuw wordt verwerkt. Voor dit specifieke probleem waarbij taal moet worden herkent in een audioclip is waarschijnlijk een GRU architectuur de beste optie. Normale RNN's hebben het probleem dat het niet goed kan omgaan met lange afstand afhankelijkheden in tijd. Een GRU architectuur kan hier beter mee omgaan omdat er door de gates op korte termijn belangrijke informatie kan worden onthouden. Een andere optie kan een LSTM architectuur zijn. Voor dit probleem is een GRU waarschijnlijk voldoende omdat het audioclips zijn waarin 1 cijfer wordt genoemd. Een LSTM kan bijvoorbeeld beter werken wanneer er een cijfer uit een zin moet worden gehaald. 
 <br>
 <br>
-- Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.
+- Geef vervolgens een indicatie en motivatie voor het aantal units/filters/kernelsize etc voor elke laag die je gebruikt, en hoe je omgaat met overgangen (bv van 3 naar 2 dimensies). Een indicatie is bijvoorbeeld een educated guess voor een aantal units, plus een boven en ondergrens voor het aantal units. Met een motivatie laat je zien dat jouw keuze niet een random selectie is, maar dat je 1) andere problemen hebt gezien en dit probleem daartegen kunt afzetten en 2) een besef hebt van de consquenties van het kiezen van een range.<br>
 <br>
-Voor het maken van een GRU architectuur zijn er een aantal opties:<br>
- In het onderstaande codevoorbeeld staat de GRU architectuur die ik ga gebruiken voor mijn model. Onder de code ligt ik het toe.<br>
+>
+ In het onderstaande codevoorbeeld staat de GRU architectuur die ik ga gebruiken voor mijn model. Onder de code leg ik de keuzes uit.<br>
 
 ```
 {
@@ -86,10 +86,9 @@ Voor het maken van een GRU architectuur zijn er een aantal opties:<br>
 ```
 <br>
 Het gaat om een dataset met ongeveer 8000 regels met ieder 13 features waar 20 classes moet worden geclassificeerd. De dataset bestaat uit mensen (mannen en vrouwen) die een nummer van 0 tot 9 in het Arabisch uitspreken. Een GRU architectuur past hier dus goed bij omdat het om kan gaan met volordelijkheid in data door het geheugen en de gates. De data is in eerste instantie drie dimensionaal en bestaat uit; batchsize, sequence length en hidden size. <br>
-Die data gaat door het aantal GRU layers wat wordt aangegeven door de parameter num_layers. In eerste instantie verwacht ik dat 2 of 3 layers voldoende zijn. Dit komt omdat het een relatief kleine dataset is met maar 13 features en de kans op overfitten bij een complexer model groter wordt. <br>
-De parameter hidden_size bepaald hoe groot het geheugen is voor de hidden state. De hidden state vat de informatie samen en beslist wat doorgaat naar de volgende GRU laag. De parameter hidden_size is enigszins vergelijkbaar met de filter_size in een CNN. Ook bij deze parameter verwacht ik dat een klein aantal mogelijk voldoende zou kunnen zijn. Ik zou starten bij 16 of 32 en op opbouwen tot maximaal 128. Door het klein te houden wordt het aantal parameters in het model klein gehouden, kan het model sneller trainen en wordt de kans op overfitting minder groot. <br>
+Die data gaat door het aantal GRU layers wat wordt aangegeven door de parameter num_layers. Het aantal layers bepaald hoe vaak de data dus door die lagen heen gaat. Voor dit probleem verwacht ik dat 2 of 3 layers voldoende is. Ik verwacht dat dit voldoende is omdat het een dataset is met 13 features. Doordat dit relatief weinig kolommen zijn is waarschijnlijk een minder diep model voldoende om te leren wat wel en niet belangrijke informatie is in de data. Een voorbeeld waarbij meer lagen mogelijk nuttiger zouden kunnen zijn is wanneer je sentiment analyse op lange reviews moet doen, waarschijnlijk is werkt een LSTM architectuur dan nog beter. <br>
+De parameter hidden_size bepaald hoe groot het geheugen is voor de hidden state. De hidden state vat de informatie samen en beslist wat doorgaat naar de volgende GRU laag. Ook bij deze parameter verwacht ik dat een klein aantal voldoende is. Ik zou starten bij 16 of 32 en op opbouwen tot maximaal 128. Door het klein te houden wordt het aantal parameters in het model klein gehouden, kan het model sneller trainen en wordt de kans op overfitting minder groot. <br>
 Een drop out toevoegen helpt ook bij mogelijk overfitten en zorgt ervoor dat het model beter kan omgaan met nieuwe data. Om te testen of dit ook voordelen heeft voor deze specifieke opdracht zou ik alles van 0 t/m 0,5 willen uitproberen. Ik verwacht wel dat 0,5 echt te hoog is omdat er dan teveel data niet wordt gebruikt. <br>
-Het toevoegen van een drop-out aan het model kan helpen bij het voorkomen van overfitten en het model beter laten presteren met nieuwe data. Ik verwacht dat een lage dropout voldoende is, ik verwacht dat ergens tussen de 0.1 en 0.2 het beste werkt. Ik zou wel alles tussen de 0 en 0,5 willen uitproberen bij het hypertunen.<br>
 Met een lineaire functie wordt er van 3 naar 2 dimensies gegaan. Een lineaire laag helpt bij het minder dimensionaal maken van de data en zorgt ervoor dat er sneller voorspellingen gemaakt kunnen worden. De output van de lineaire functie heeft het aantal classes dat moet worden voorspeld, in dit geval 20. <br>
 <br>
 
@@ -122,8 +121,10 @@ Met een lineaire functie wordt er van 3 naar 2 dimensies gegaan. Een lineaire la
 }
 ```
 <br>
-Ik verwacht dat 2 lagen voldoende zijn om een goed resultaat te bereiken, omdat het aantal features relatief laag is en het probleem niet al te complex is. Mogelijk werkt 1 of 3 lagen beter, dus ik zal deze beide opties meenemen in vraag 1D. Er zijn 13 input features en 20 output classes, waar 16 tussen zit, dus ik zal de hidden_size daarmee beginnen. Het kan zijn dat 32 als hidden_size een betere prestatie oplevert, dus ik zal dit ook meenemen in vraag 1D. Ik verwacht dat de kans op overfitting toeneemt bij een hidden_size van 64 of meer lagen.
-Voor de training settings wordt er begonnen met **NOG aanpassen** om te bekijken of dat voldoende is. Er wordt begonnen met een laag aantal epochs omdat ook een grote hoeveelheid epochs de kans op overfitten vergroot en simpelweg ook meer tijd kost.<br>
+Ik verwacht dat 2 lagen voldoende is om een goed resultaat te bereiken, omdat het aantal features relatief laag is en het probleem niet heel complex is. Mogelijk werkt 3 lagen beter, dus ik zal deze optie meenemen in vraag 1D. Meer lagen zorgen voor een complexere architectuur waardoor de kans op overfitting toeneemt. Daarnaast kosten meer lagen ook gewoon meer computerkracht dus is het verstandig om klein te beginnen. <br>
+Er zijn 13 input features en 20 output classes, waar 16 tussen zit, dus ik zal de hidden_size daarmee beginnen. Het kan zijn dat 32 als hidden_size een betere prestatie oplevert, dus ik zal dit ook meenemen in vraag 1D. Ik verwacht dat de kans op overfitting toeneemt bij een hidden_size van 128 omdat het aantal parameters wat het model dan gebruikt sterk toeneemt. Omdat er dan mogelijk teveel focus wordt gelegd op de outliers in de data bestaat de kans dat het model te goed gaat werken op de trainset maar niet meer generaliseerd op de testset. <br>
+Voor de training settings wordt er begonnen met 50 epochs om te bekijken of het model blijft leren of dat een lager aantal beter is. Ik verwacht dat minder voldoende gaat zijn omdat het aantal epochs dat een model nodig heeft om goed te leren ook samenhangt met de complexiteit van de taak. Daarnaast hangt het ook af van de architectuur, met 2 lagen en 16 als hidden size is mogelijk 20 epochs genoeg om tot een goede accuracy te komen. Door nu te testen met 50 epochs kan worden achterhaald op welk punt in de epochs het model stopt met het maken van verbeteringen.<br> 
+De learningrate blijft staan op 1-e3 om te bekijken of dit voldoende werkt met de archictectuur.<br>
 <br>
 
 ### 1d
@@ -139,7 +140,7 @@ Implementeer jouw veelbelovende model:
 
 **Run 1: 2 layers, hidden_size van 16 en drop_out 0.2**
 
-Ik heb de architectuur gebruikt zoals beschreven in 1C en dit levert de volgende resultaten op.
+Ik heb voor de eerste run de architectuur gebruikt zoals beschreven in 1C.
 Op de onderstaande afbeeldingen staan de loss grafieken van de test en train set uit Tensorboard.
 Het model lijkt na 50 epochs nog steeds nieuwe patronen te ontdekken omdat de lijn nog naar beneden gaat. Het model is dus nog niet aan het over- of underfitten.
 
