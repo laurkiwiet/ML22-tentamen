@@ -1,4 +1,5 @@
 ```
+Tentamen van Laura Kiwiet
 ├── README.md       <- this file
 ├── data            <- store your data here
 │   ├── raw           <- raw, initial data
